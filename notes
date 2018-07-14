@@ -1,0 +1,27 @@
+Tutorial: https://www.youtube.com/watch?v=PFP0oXNNveg
+Tutorial for Angular to Rest: https://www.youtube.com/watch?v=KhzGSHNhnbI
+
+Mongodb:
+- Installed
+- C:\Program Files\MongoDB\Server\4.0\bin\Mongo
+- Create db - use tasklist
+- Create collection - db.createCollection("tasks")
+- Add documents - tasklist.tasks.insert({ title: 'Call Fotiana',   state: 'Done' })
+
+- List all: use tasklist
+            db.tasks.find({})
+
+Angular - followed angular.io quickstart guide in client folder
+
+Postman test:
+    Post: Body / Raw / JSON: 
+    {
+        "title": "Call Chrystalla",
+        "state": "To Do"
+    }
+    Delete: http://localhost:3000/api/task/5b40ac73ae6985250109c499
+
+Run server: node server  (or run nodemon to auto update)
+
+Create new Angular project: ng new client
+Run Angular project: ng serve --open
