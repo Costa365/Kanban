@@ -28,10 +28,6 @@ router.post('/task', function (req, res, next) {
             }
             let nextId = parseInt(tasks[tasks.length - 1]._id, 10) + 1;
             task._id = nextId;
-            //res.header("Access-Control-Allow-Origin", "*");
-            //res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-            //res.header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE, PUT");
-
             db.tasks.save(task, function (err, task) {
                 if (err) {
                     res.send(err)

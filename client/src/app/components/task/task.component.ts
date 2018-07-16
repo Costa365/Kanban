@@ -13,20 +13,25 @@ export class TaskComponent implements OnInit {
   constructor(private dataService: DataService) { }
 
   ngOnInit() {
+    this.getTasks();
+  }
+
+  getTasks() {
     this.dataService.getTasks().subscribe((tasks)=>{
       this.tasks = tasks;
     })
   }
 
-  addTask(title){
+  addTask(title) {
     const newTask:task = {
       _id: null,
       title: title,
       state: "To Do"
     }
-    this.dataService.addTask(newTask)
+    this.dataService.addTask(newTask).add(()=>{
+      this.getTasks();
+    })
+
     return false;
   }
-
-
 }

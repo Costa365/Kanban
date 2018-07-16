@@ -18,15 +18,14 @@ export class DataService {
     .pipe(map(res => res.json()));
   }
 
-
   addTask (newTask: task) {
-    const req = this.http.post(this.apiUri + "task", newTask)
+    return this.http.post(this.apiUri + "task", newTask)
       .subscribe(
         res => {
-          console.log(res);
+          console.log("addTask: " + res);
         },
         err => {
-          console.log("Error occured");
+          console.log("addTask: Error occured");
         }
       );
   }
