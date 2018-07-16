@@ -1,5 +1,12 @@
 <h1>Tasks</h1>
 
+<form (submit)="addTask(title.value)">
+  <div>
+    <label for="title">Title:</label>
+    <input type="text" #title >
+    </div>
+</form>
+
 <div *ngFor="let task of tasks">
   ID:{{task._id}}, Title: {{task.title}}, State: <i>{{task.state}}</i>
 </div>

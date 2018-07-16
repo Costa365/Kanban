@@ -1,14 +1,12 @@
 var express = require('express');
 var router = express.Router();
 var mongojs = require('mongojs');
-var db = mongojs('mongodb://localhost/tasklist')
+var db = mongojs('mongodb://localhost/tasklist');
 
 // Get Tasks
-router.get('/tasks', function(req, res, next){
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    db.tasks.find().sort({_id: 1}, function(err, tasks){
-        if(err){
+router.get('/tasks', function (req, res, next) {
+    db.tasks.find().sort({ _id: 1 }, function (err, tasks) {
+        if (err) {
             res.send(err)
         }
         res.json(tasks);
@@ -16,28 +14,38 @@ router.get('/tasks', function(req, res, next){
 });
 
 // Save Task
-router.post('/task', function(req, res, next){
+router.post('/task', function (req, res, next) {
     var task = req.body;
-
-    if(!task.title || task.state != 'To Do'){
+    if (!task.title || task.state != 'To Do') {
         res.status(400);
         res.json({
             "error": "Bad Data"
         });
     } else {
-        db.tasks.save(task, function(err, task){
-            if(err){
+        db.tasks.find().limit(1).sort({ _id: -1 }, function (err, tasks) {
+            if (err) {
                 res.send(err)
             }
-            res.json(task);
+            let nextId = parseInt(tasks[tasks.length - 1]._id, 10) + 1;
+            task._id = nextId;
+            //res.header("Access-Control-Allow-Origin", "*");
+            //res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+            //res.header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE, PUT");
+
+            db.tasks.save(task, function (err, task) {
+                if (err) {
+                    res.send(err)
+                }
+                res.json(task);
+            });
         });
     }
 });
 
 // Delete Task
-router.delete('/task/:id', function(req, res, next){
-    db.tasks.remove({_id: mongojs.ObjectId(req.params.id)}, function(err, task){
-        if(err){
+router.delete('/task/:id', function (req, res, next) {
+    db.tasks.remove({ _id: mongojs.ObjectId(req.params.id) }, function (err, task) {
+        if (err) {
             res.send(err)
         }
         res.json(task);
@@ -45,15 +53,15 @@ router.delete('/task/:id', function(req, res, next){
 });
 
 // Update Task
-router.put('/task/:id', function(req, res, next){
+router.put('/task/:id', function (req, res, next) {
     var task = req.body;
     var updatedTask = {}
-    
+
     updatedTask.title = task.title;
     updatedTask.state = task.state;
 
-    db.tasks.update({_id: mongojs.ObjectId(req.params.id)}, updatedTask, {}, function(err, task){
-        if(err){
+    db.tasks.update({ _id: mongojs.ObjectId(req.params.id) }, updatedTask, {}, function (err, task) {
+        if (err) {
             res.send(err)
         }
         res.json(tasks);

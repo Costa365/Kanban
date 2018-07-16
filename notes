@@ -7,9 +7,9 @@ Mongodb:
 - Create db - use tasklist
 - Create collection - db.createCollection("tasks")
 - Add documents - tasklist.tasks.insert({ title: 'Call Fotiana',   state: 'Done' })
-
 - List all: use tasklist
             db.tasks.find({})
+- Delete one: db.tasks.deleteOne( { _id: "5" } )
 
 Angular - followed angular.io quickstart guide in client folder
 

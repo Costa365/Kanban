@@ -17,10 +17,16 @@ export class TaskComponent implements OnInit {
       this.tasks = tasks;
     })
   }
-}
 
-interface task {
-  _id: string,
-  title: string,
-  state: string
+  addTask(title){
+    const newTask:task = {
+      _id: null,
+      title: title,
+      state: "To Do"
+    }
+    this.dataService.addTask(newTask)
+    return false;
+  }
+
+
 }
