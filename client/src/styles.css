@@ -2,7 +2,7 @@
 
 .task {
     color: 'red';
-    background:#50e050;
+    background:#c9f07b;
     border-color: #009000;
     border: 2px solid;
     margin: auto;
@@ -22,4 +22,8 @@
     content: "";
     display: table;
     clear: both;
+}
+
+.container {
+    min-height: 100px;
 }

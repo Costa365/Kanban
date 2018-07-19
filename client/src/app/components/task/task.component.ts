@@ -29,7 +29,27 @@ export class TaskComponent implements OnInit {
         console.log(`elTarget: ${elTarget.getAttribute('id')}`);
       }
       console.log(`newIndex: ${newIndex}`);
+      console.log(`Text: ${elSource.textContent}`);
+      this.updateTask(
+        elSource.getAttribute('id'), 
+        elSource.textContent, 
+        this.getStateFromColumn(bagTarget.getAttribute('column-id')));
     });
+  }
+
+  private getStateFromColumn(column){
+    switch(column) { 
+      case "col_doing": { 
+         return "In Progress";
+      } 
+      case "col_done": { 
+        return "Done";
+      } 
+      case "col_to_do":
+      default: { 
+        return "To Do";
+      }
+    } 
   }
 
   private getElementIndex(el: HTMLElement): number {
@@ -57,6 +77,19 @@ export class TaskComponent implements OnInit {
       state: "To Do"
     }
     this.dataService.addTask(newTask).add(()=>{
+      this.getTasks();
+    })
+
+    return false;
+  }
+
+  updateTask(id,title,state) {
+    const updatedTask:task = {
+      _id: id,
+      title: title,
+      state: state
+    }
+    this.dataService.updateTask(updatedTask).add(()=>{
       this.getTasks();
     })
 

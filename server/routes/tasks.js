@@ -55,12 +55,13 @@ router.put('/task/:id', function (req, res, next) {
 
     updatedTask.title = task.title;
     updatedTask.state = task.state;
+    updatedTask._id = parseInt(task._id);
 
-    db.tasks.update({ _id: mongojs.ObjectId(req.params.id) }, updatedTask, {}, function (err, task) {
+    db.tasks.save(updatedTask, function (err, updatedTask) {
         if (err) {
             res.send(err)
         }
-        res.json(tasks);
+        res.json(updatedTask);
     });
 });
 
