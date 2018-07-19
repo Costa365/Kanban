@@ -3,11 +3,12 @@ import { NgModule } from '@angular/core';
 import { HttpModule } from '@angular/http';
 import { RouterModule, Routes } from '@angular/router';
 
+import { DragulaModule } from 'ng2-dragula/ng2-dragula';
+
 import { AppComponent } from './app.component';
 import { TaskComponent } from './components/task/task.component';
-
-import { DataService } from './services/data.service';
 import { AboutComponent } from './components/about/about.component';
+import { DataService } from './services/data.service';
 
 const appRoutes: Routes = [
   {path:'', component:TaskComponent},
@@ -23,7 +24,8 @@ const appRoutes: Routes = [
   imports: [
     BrowserModule,
     HttpModule,
-    RouterModule.forRoot(appRoutes)
+    RouterModule.forRoot(appRoutes),
+    DragulaModule
   ],
   providers: [DataService],
   bootstrap: [AppComponent]

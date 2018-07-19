@@ -1,1 +1,25 @@
 /* You can add global styles to this file, and also import other style files */
+
+.task {
+    color: 'red';
+    background:#50e050;
+    border-color: #009000;
+    border: 2px solid;
+    margin: auto;
+    margin-bottom: 10px;
+    width: 200px;
+    text-align: center;
+}
+
+.column {
+    float: left;
+    width: 33.33%;
+    text-align: center;
+}
+
+/* Clear floats after the columns */
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}

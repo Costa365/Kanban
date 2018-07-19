@@ -21,6 +21,8 @@
     "@angular/platform-browser-dynamic": "^6.0.3",
     "@angular/router": "^6.0.3",
     "core-js": "^2.5.4",
+    "ng2-dragula": "^1.5.0",
+    "npm": "^6.2.0",
     "rxjs": "^6.2.1",
     "zone.js": "^0.8.26"
   },
