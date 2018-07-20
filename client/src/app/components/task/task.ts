@@ -1,5 +1,6 @@
 interface task {
-    _id: string,
+    position: number,
     title: string,
-    state: string
+    state: string,
+    _id: string
   }

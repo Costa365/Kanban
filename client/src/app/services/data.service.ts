@@ -31,7 +31,7 @@ export class DataService {
   }
 
   updateTask (updatedTask: task) {
-    console.log("Service updateTask: ", updatedTask._id, updatedTask.title, updatedTask.state);
+    console.log("Service updateTask: ", updatedTask._id, updatedTask.position, updatedTask.title, updatedTask.state);
     return this.http.put(this.apiUri + "task/" + updatedTask._id, updatedTask)
       .subscribe(
         res => {

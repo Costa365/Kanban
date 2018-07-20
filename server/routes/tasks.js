@@ -5,7 +5,7 @@ var db = mongojs('mongodb://localhost/tasklist');
 
 // Get Tasks
 router.get('/tasks', function (req, res, next) {
-    db.tasks.find().sort({ _id: 1 }, function (err, tasks) {
+    db.tasks.find().sort({ date: -1, position: 1  }, function (err, tasks) {
         if (err) {
             res.send(err)
         }
@@ -22,19 +22,41 @@ router.post('/task', function (req, res, next) {
             "error": "Bad Data"
         });
     } else {
-        db.tasks.find().limit(1).sort({ _id: -1 }, function (err, tasks) {
+        task.position = 1;
+
+        db.tasks.count({},function(err, count){
+            if(count > 0) {
+                db.tasks.find().limit(1).sort({ position: -1 }, function (err, tasks) {
+                    if (err) {
+                        res.send(err)
+                    }
+                    let nextPos = parseInt(tasks[tasks.length - 1].position, 10) + 1;
+                    task.position = nextPos;
+                    db.tasks.save(task, function (err, task) {
+                        if (err) {
+                            res.send(err)
+                        }
+                        res.json(task);
+                    });
+                });
+            } else {
+                task.position = 1;
+                db.tasks.save(task, function (err, task) {
+                    if (err) {
+                        res.send(err)
+                    }
+                    res.json(task);
+                });
+            }
+        });
+
+        /*
+        db.tasks.save(task, function (err, task) {
             if (err) {
                 res.send(err)
             }
-            let nextId = parseInt(tasks[tasks.length - 1]._id, 10) + 1;
-            task._id = nextId;
-            db.tasks.save(task, function (err, task) {
-                if (err) {
-                    res.send(err)
-                }
-                res.json(task);
-            });
-        });
+            res.json(task);
+        }); */
     }
 });
 
@@ -51,19 +73,14 @@ router.delete('/task/:id', function (req, res, next) {
 // Update Task
 router.put('/task/:id', function (req, res, next) {
     var task = req.body;
-    var updatedTask = {}
+    task._id = mongojs.ObjectId(task._id);
 
-    updatedTask.title = task.title;
-    updatedTask.state = task.state;
-    updatedTask._id = parseInt(task._id);
-
-    db.tasks.save(updatedTask, function (err, updatedTask) {
+    db.tasks.save(task, function (err, task) {
         if (err) {
             res.send(err)
         }
-        res.json(updatedTask);
+        res.json(task);
     });
 });
-
 
 module.exports = router

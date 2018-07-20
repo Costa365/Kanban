@@ -30,10 +30,15 @@ export class TaskComponent implements OnInit {
       }
       console.log(`newIndex: ${newIndex}`);
       console.log(`Text: ${elSource.textContent}`);
-      this.updateTask(
-        elSource.getAttribute('id'), 
-        elSource.textContent, 
-        this.getStateFromColumn(bagTarget.getAttribute('column-id')));
+
+      const updatedTask:task = {
+        position: parseInt(newIndex),
+        title: elSource.textContent,
+        state: this.getStateFromColumn(bagTarget.getAttribute('column-id')),
+        _id: elSource.getAttribute('id')
+      }
+
+      this.updateTask(updatedTask);
     });
   }
 
@@ -72,9 +77,10 @@ export class TaskComponent implements OnInit {
 
   addTask(title) {
     const newTask:task = {
-      _id: null,
+      position: 1,
       title: title,
-      state: "To Do"
+      state: "To Do",
+      _id: null
     }
     this.dataService.addTask(newTask).add(()=>{
       this.getTasks();
@@ -83,16 +89,11 @@ export class TaskComponent implements OnInit {
     return false;
   }
 
-  updateTask(id,title,state) {
-    const updatedTask:task = {
-      _id: id,
-      title: title,
-      state: state
-    }
-    this.dataService.updateTask(updatedTask).add(()=>{
+  updateTask(task) {
+    this.dataService.updateTask(task).add(()=>{
       this.getTasks();
     })
-
+  
     return false;
   }
 }
