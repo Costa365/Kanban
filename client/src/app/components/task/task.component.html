@@ -14,7 +14,10 @@
     <b>To Do</b> 
     <div class="container" column-id="col_to_do" [dragula]='"bag-task1"' [dragulaOptions]='Options'>
       <ng-container *ngFor="let task of tasks" >
-          <div *ngIf="(task.state == 'To Do')" id="{{task._id}}" class="task">{{task.title}}</div>
+        <div *ngIf="(task.state == 'To Do')" id="{{task._id}}" class="task">
+          <button class="task-button" (click)="deleteTask(task._id)"><img src="../../../assets/img/delete.png"/></button>
+          {{task.title}}
+        </div>
       </ng-container>
     </div>
   </div>
@@ -22,16 +25,22 @@
     <b>Doing</b>
     <div class="container" column-id="col_doing" [dragula]='"bag-task1"' [dragulaOptions]='Options'>
       <ng-container *ngFor="let task of tasks">
-        <div *ngIf="(task.state == 'In Progress')" id="{{task._id}}" class="task">{{task.title}}</div>
+        <div *ngIf="(task.state == 'In Progress')" id="{{task._id}}" class="task">
+          <button class="task-button" (click)="deleteTask(task._id)"><img src="../../../assets/img/delete.png"/></button>
+          {{task.title}}
+        </div>
       </ng-container>
     </div>
   </div>
   <div class="column">
     <b>Done</b>
     <div class="container" column-id="col_done" [dragula]='"bag-task1"' [dragulaOptions]='Options'>
-        <ng-container *ngFor="let task of tasks">
-            <div *ngIf="(task.state == 'Done')" id="{{task._id}}" class="task">{{task.title}}</div>
-        </ng-container>
+      <ng-container *ngFor="let task of tasks">
+        <div *ngIf="(task.state == 'Done')" id="{{task._id}}" class="task">
+          <button class="task-button" (click)="deleteTask(task._id)"><img src="../../../assets/img/delete.png"/></button>
+          {{task.title}}
+        </div>
+      </ng-container>
     </div>
   </div>
 </div>

@@ -42,4 +42,16 @@ export class DataService {
         }
       );
   }
+
+  deleteTask (id: number) {
+    return this.http.delete(this.apiUri + "task\\" + id)
+      .subscribe(
+        res => {
+          console.log("deleteTask: " + res);
+        },
+        err => {
+          console.log("deleteTask: Error occured");
+        }
+      );
+  }
 }

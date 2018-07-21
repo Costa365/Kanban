@@ -1,0 +1,35 @@
+.task {
+    color: 'red';
+    background:#c9f07b;
+    border-color: #009000;
+    border: 2px solid;
+    margin: auto;
+    margin-bottom: 10px;
+    width: 200px;
+    text-align: center;
+}
+
+.column {
+    float: left;
+    width: 33.33%;
+    text-align: center;
+}
+
+/* Clear floats after the columns */
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.container {
+    min-height: 100px;
+}
+
+.task-button {
+    border: none;
+    padding: 0;
+    background: none;
+    float: right;
+    margin: 1px 1px 0px 0px;
+  }

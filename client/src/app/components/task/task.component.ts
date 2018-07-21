@@ -96,4 +96,11 @@ export class TaskComponent implements OnInit {
   
     return false;
   }
+
+  deleteTask(id) {
+    console.log("Delete: " + id);
+    this.dataService.deleteTask(id).add(()=>{
+      this.getTasks();
+    })
+  }
 }
