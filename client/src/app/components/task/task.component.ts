@@ -99,8 +99,10 @@ export class TaskComponent implements OnInit {
 
   deleteTask(id) {
     console.log("Delete: " + id);
-    this.dataService.deleteTask(id).add(()=>{
-      this.getTasks();
-    })
+    if (confirm("Are you sure?") == true) {
+      this.dataService.deleteTask(id).add(()=>{
+        this.getTasks();
+      })
+    }   
   }
 }
