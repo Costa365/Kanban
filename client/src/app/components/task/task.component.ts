@@ -11,11 +11,12 @@ export class TaskComponent implements OnInit {
 
   tasks: task[];
 
-  options: any = {
-    removeOnSpill: false
-  }
+   constructor(private dataService: DataService, private dragulaService: DragulaService) { 
 
-  constructor(private dataService: DataService, private dragulaService: DragulaService) { 
+    this.dragulaService.setOptions('bag-tasks', {
+      revertOnSpill: false
+    });
+
     this.dragulaService.drop.subscribe((args: any) => {
       const [bagName, elSource, bagTarget, bagSource, elTarget] = args;
       const newIndex = elTarget ? this.getElementIndex(elTarget) : bagTarget.childElementCount;
@@ -33,12 +34,16 @@ export class TaskComponent implements OnInit {
 
       const updatedTask:task = {
         position: parseInt(newIndex),
-        title: elSource.textContent,
+        title: elSource.textContent.trim(),
         state: this.getStateFromColumn(bagTarget.getAttribute('column-id')),
         _id: elSource.getAttribute('id')
       }
 
       this.updateTask(updatedTask);
+
+      this.tasks.forEach( (element) => {
+        console.log("XXXXX: " + element.state + ", " + element.position + ", " + element.title);
+      }); 
     });
   }
 

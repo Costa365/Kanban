@@ -49,14 +49,6 @@ router.post('/task', function (req, res, next) {
                 });
             }
         });
-
-        /*
-        db.tasks.save(task, function (err, task) {
-            if (err) {
-                res.send(err)
-            }
-            res.json(task);
-        }); */
     }
 });
 
@@ -75,7 +67,7 @@ router.put('/task/:id', function (req, res, next) {
     var task = req.body;
     task._id = mongojs.ObjectId(task._id);
 
-    db.tasks.save(task, function (err, task) {
+    db.tasks.update({ _id: mongojs.ObjectId(req.params.id) },task, function (err, task) {
         if (err) {
             res.send(err)
         }
