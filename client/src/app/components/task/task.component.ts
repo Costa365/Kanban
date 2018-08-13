@@ -12,11 +12,6 @@ export class TaskComponent implements OnInit {
   tasks: task[];
 
    constructor(private dataService: DataService, private dragulaService: DragulaService) { 
-
-    this.dragulaService.setOptions('bag-tasks', {
-      revertOnSpill: false
-    });
-
     this.dragulaService.drop.subscribe((args: any) => {
       const [bagName, elSource, bagTarget, bagSource, elTarget] = args;
       const newIndex = elTarget ? this.getElementIndex(elTarget) : bagTarget.childElementCount;
@@ -67,7 +62,16 @@ export class TaskComponent implements OnInit {
   }
 
   ngOnInit() {
+    
+    this.dragulaService.setOptions('bag-tasks', {
+      revertOnSpill: false
+    });
+
     this.getTasks();
+  }
+
+  ngOnDestroy() {
+    this.dragulaService.destroy("bag-tasks");
   }
 
   getTasks() {
