@@ -11,6 +11,7 @@ Mongodb:
 - List all: use tasklist
             db.tasks.find({})
 - Delete one: db.tasks.deleteOne( { _id: "5" } )
+- Start service: net start mongodb
 
 Angular - followed angular.io quickstart guide in client folder
 

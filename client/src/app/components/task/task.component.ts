@@ -14,31 +14,7 @@ export class TaskComponent implements OnInit {
    constructor(private dataService: DataService, private dragulaService: DragulaService) { 
     this.dragulaService.drop.subscribe((args: any) => {
       const [bagName, elSource, bagTarget, bagSource, elTarget] = args;
-      const newIndex = elTarget ? this.getElementIndex(elTarget) : bagTarget.childElementCount;
-
-      console.log('----------Dropped-------------');
-      console.log(`bagName: ${bagName}`);
-      console.log(`elSource: ${elSource.getAttribute('id')}`);
-      console.log(`bagTarget: ${bagTarget.getAttribute('column-id')}`);
-      console.log(`bagSource: ${bagSource.getAttribute('column-id')}`);
-      if(elTarget){
-        console.log(`elTarget: ${elTarget.getAttribute('id')}`);
-      }
-      console.log(`newIndex: ${newIndex}`);
-      console.log(`Text: ${elSource.textContent}`);
-
-      const updatedTask:task = {
-        position: parseInt(newIndex),
-        title: elSource.textContent.trim(),
-        state: this.getStateFromColumn(bagTarget.getAttribute('column-id')),
-        _id: elSource.getAttribute('id')
-      }
-
-      this.updateTask(updatedTask);
-
-      this.tasks.forEach( (element) => {
-        console.log("XXXXX: " + element.state + ", " + element.position + ", " + element.title);
-      }); 
+      this.updateTasks(bagSource, bagTarget);
     });
   }
 
@@ -62,11 +38,9 @@ export class TaskComponent implements OnInit {
   }
 
   ngOnInit() {
-    
     this.dragulaService.setOptions('bag-tasks', {
       revertOnSpill: false
     });
-
     this.getTasks();
   }
 
@@ -74,17 +48,13 @@ export class TaskComponent implements OnInit {
     this.dragulaService.destroy("bag-tasks");
   }
 
-  getTasks() {
+  private getTasks() {
     this.dataService.getTasks().subscribe((tasks)=>{
       this.tasks = tasks;
     })
   }
 
-  filterItemsOfType(type){
-    return this.tasks.filter(x => x.state == type);
-  }
-
-  addTask(title) {
+  private addTask(title) {
     const newTask:task = {
       position: 1,
       title: title,
@@ -94,19 +64,38 @@ export class TaskComponent implements OnInit {
     this.dataService.addTask(newTask).add(()=>{
       this.getTasks();
     })
-
     return false;
   }
 
-  updateTask(task) {
+  private updateTaskThenGetTasks(task) {
     this.dataService.updateTask(task).add(()=>{
       this.getTasks();
     })
-  
     return false;
   }
 
-  deleteTask(id) {
+  private updateTasks(bagSource, bagTarget) {
+    for (var i = 0; i < bagSource.children.length; i++) { 
+      this.updateTask(bagSource.children[i].id, bagSource.children[i].textContent, i+1, 
+        bagSource.getAttribute('column-id'));
+    }
+    for (var i = 0; i < bagTarget.children.length; i++) { 
+      this.updateTask(bagTarget.children[i].id, bagTarget.children[i].textContent, i+1, 
+        bagTarget.getAttribute('column-id'));
+    }
+  }
+
+  private updateTask(id, title, position, state) {  
+    const updatedTask:task = {
+      position: position,
+      title: title,
+      state: this.getStateFromColumn(state),
+      _id: id
+    }
+    this.updateTaskThenGetTasks(updatedTask); 
+  }
+
+  private deleteTask(id) {
     console.log("Delete: " + id);
     if (confirm("Are you sure?") == true) {
       this.dataService.deleteTask(id).add(()=>{
