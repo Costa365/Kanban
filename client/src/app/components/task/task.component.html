@@ -1,9 +1,8 @@
 <hr />
 <form (submit)="addTask(title.value);">
   <div>
-    <label for="title">New Task: </label>
-    <input id="title" type="text" #title >
-    <button type="submit" value="Submit">Submit</button>
+    <input id="title" type="text" placeholder="New task" autocomplete="off" #title >
+    <button class="minimal" type="submit" value="Submit">Submit</button>
   </div>
 </form>
 
@@ -14,7 +13,7 @@
     <b>To Do</b> 
     <div class="container" column-id="col_to_do" [dragula]='"bag-tasks"'>
       <ng-container *ngFor="let task of tasks" >
-        <div *ngIf="(task.state == 'To Do')" id="{{task._id}}" class="task">
+        <div *ngIf="(task.state == 'To Do')" id="{{task._id}}" class="task_todo">
           <button class="task-button" (click)="deleteTask(task._id)"><img src="../../../assets/img/delete.png"/></button>
           {{task.title}}
         </div>
@@ -25,7 +24,7 @@
     <b>Doing</b>
     <div class="container" column-id="col_doing" [dragula]='"bag-tasks"'>
       <ng-container *ngFor="let task of tasks">
-        <div *ngIf="(task.state == 'In Progress')" id="{{task._id}}" class="task">
+        <div *ngIf="(task.state == 'In Progress')" id="{{task._id}}" class="task_doing">
           <button class="task-button" (click)="deleteTask(task._id)"><img src="../../../assets/img/delete.png"/></button>
           {{task.title}}
         </div>
@@ -36,7 +35,7 @@
     <b>Done</b>
     <div class="container" column-id="col_done" [dragula]='"bag-tasks"'>
       <ng-container *ngFor="let task of tasks">
-        <div *ngIf="(task.state == 'Done')" id="{{task._id}}" class="task">
+        <div *ngIf="(task.state == 'Done')" id="{{task._id}}" class="task_done">
           <button class="task-button" (click)="deleteTask(task._id)"><img src="../../../assets/img/delete.png"/></button>
           {{task.title}}
         </div>
