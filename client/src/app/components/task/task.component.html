@@ -1,45 +1,51 @@
 <hr />
-<form (submit)="addTask(title.value);">
+<form (submit)="addTask(title.value); title.value = ''; $event.preventDefault()">
   <div>
-    <input id="title" type="text" placeholder="New task" autocomplete="off" #title >
-    <button class="minimal" type="submit" value="Submit">Submit</button>
+    <input id="title" type="text" placeholder="New task" autocomplete="off" #title>
+    <button class="minimal" type="submit">Submit</button>
   </div>
 </form>
 
 <hr />
 
-<div class="row">
+<div class="row" cdkDropListGroup>
   <div class="column">
-    <b>To Do</b> 
-    <div class="container" column-id="col_to_do" [dragula]='"bag-tasks"'>
-      <ng-container *ngFor="let task of tasks" >
-        <div *ngIf="(task.state == 'To Do')" id="{{task._id}}" class="task_todo">
-          <button class="task-button" (click)="deleteTask(task._id)"><img src="../../../assets/img/delete.png"/></button>
-          {{task.title}}
-        </div>
-      </ng-container>
+    <b>To Do</b>
+    <div class="container" cdkDropList id="col_to_do"
+         [cdkDropListData]="todoTasks"
+         (cdkDropListDropped)="onDrop($event)">
+      <div *ngFor="let task of todoTasks" cdkDrag class="task_todo">
+        <button class="task-button" type="button" (click)="deleteTask(task._id)">
+          <img src="assets/img/delete.png" alt="delete"/>
+        </button>
+        {{task.title}}
+      </div>
     </div>
   </div>
   <div class="column">
     <b>Doing</b>
-    <div class="container" column-id="col_doing" [dragula]='"bag-tasks"'>
-      <ng-container *ngFor="let task of tasks">
-        <div *ngIf="(task.state == 'In Progress')" id="{{task._id}}" class="task_doing">
-          <button class="task-button" (click)="deleteTask(task._id)"><img src="../../../assets/img/delete.png"/></button>
-          {{task.title}}
-        </div>
-      </ng-container>
+    <div class="container" cdkDropList id="col_doing"
+         [cdkDropListData]="doingTasks"
+         (cdkDropListDropped)="onDrop($event)">
+      <div *ngFor="let task of doingTasks" cdkDrag class="task_doing">
+        <button class="task-button" type="button" (click)="deleteTask(task._id)">
+          <img src="assets/img/delete.png" alt="delete"/>
+        </button>
+        {{task.title}}
+      </div>
     </div>
   </div>
   <div class="column">
     <b>Done</b>
-    <div class="container" column-id="col_done" [dragula]='"bag-tasks"'>
-      <ng-container *ngFor="let task of tasks">
-        <div *ngIf="(task.state == 'Done')" id="{{task._id}}" class="task_done">
-          <button class="task-button" (click)="deleteTask(task._id)"><img src="../../../assets/img/delete.png"/></button>
-          {{task.title}}
-        </div>
-      </ng-container>
+    <div class="container" cdkDropList id="col_done"
+         [cdkDropListData]="doneTasks"
+         (cdkDropListDropped)="onDrop($event)">
+      <div *ngFor="let task of doneTasks" cdkDrag class="task_done">
+        <button class="task-button" type="button" (click)="deleteTask(task._id)">
+          <img src="assets/img/delete.png" alt="delete"/>
+        </button>
+        {{task.title}}
+      </div>
     </div>
   </div>
 </div>

@@ -1,57 +1,29 @@
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
-import { map } from "rxjs/operators";
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { Task } from '../components/task/task';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class DataService {
+  private readonly apiUri = '/api/';
 
-  readonly apiUri: string = "http://localhost:3000/api/"
+  constructor(private http: HttpClient) {}
 
-  constructor(public http:Http) { 
-    console.log("Data service connected");
+  getTasks(): Observable<Task[]> {
+    return this.http.get<Task[]>(this.apiUri + 'tasks');
   }
 
-  getTasks(){
-    return this.http.get(this.apiUri + "tasks")
-    .pipe(map(res => res.json()));
+  addTask(task: Task): Observable<Task> {
+    return this.http.post<Task>(this.apiUri + 'task', task);
   }
 
-  addTask (newTask: task) {
-    return this.http.post(this.apiUri + "task", newTask)
-      .subscribe(
-        res => {
-          console.log("addTask: " + res);
-        },
-        err => {
-          console.log("addTask: Error occured");
-        }
-      );
+  updateTask(task: Task): Observable<Task> {
+    return this.http.put<Task>(this.apiUri + 'task/' + task._id, task);
   }
 
-  updateTask (updatedTask: task) {
-    console.log("Service updateTask: ", updatedTask._id, updatedTask.position, updatedTask.title, updatedTask.state);
-    return this.http.put(this.apiUri + "task/" + updatedTask._id, updatedTask)
-      .subscribe(
-        res => {
-          console.log("updateTask: " + res);
-        },
-        err => {
-          console.log("updateTask: Error occured");
-        }
-      );
-  }
-
-  deleteTask (id: number) {
-    return this.http.delete(this.apiUri + "task\\" + id)
-      .subscribe(
-        res => {
-          console.log("deleteTask: " + res);
-        },
-        err => {
-          console.log("deleteTask: Error occured");
-        }
-      );
+  deleteTask(id: string): Observable<unknown> {
+    return this.http.delete(this.apiUri + 'task/' + id);
   }
 }

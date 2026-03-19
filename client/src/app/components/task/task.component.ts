@@ -1,106 +1,85 @@
 import { Component, OnInit } from '@angular/core';
-import { DataService} from '../../services/data.service';
-import { DragulaService } from 'ng2-dragula/ng2-dragula';
+import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { DataService } from '../../services/data.service';
+import { Task } from './task';
 
 @Component({
   selector: 'app-task',
   templateUrl: './task.component.html',
-  styleUrls: ['./task.component.css']
+  styleUrls: ['./task.component.css'],
+  standalone: false,
 })
 export class TaskComponent implements OnInit {
+  todoTasks: Task[] = [];
+  doingTasks: Task[] = [];
+  doneTasks: Task[] = [];
 
-  tasks: task[];
+  constructor(private dataService: DataService) {}
 
-   constructor(private dataService: DataService, private dragulaService: DragulaService) { 
-    this.dragulaService.drop.subscribe((args: any) => {
-      const [bagName, elSource, bagTarget, bagSource, elTarget] = args;
-      this.updateTasks(bagSource, bagTarget);
-    });
-  }
-
-  private getStateFromColumn(column){
-    switch(column) { 
-      case "col_doing": { 
-         return "In Progress";
-      } 
-      case "col_done": { 
-        return "Done";
-      } 
-      case "col_to_do":
-      default: { 
-        return "To Do";
-      }
-    } 
-  }
-
-  private getElementIndex(el: HTMLElement): number {
-    return [].slice.call(el.parentElement.children).indexOf(el);
-  }
-
-  ngOnInit() {
-    this.dragulaService.setOptions('bag-tasks', {
-      revertOnSpill: false
-    });
+  ngOnInit(): void {
     this.getTasks();
   }
 
-  ngOnDestroy() {
-    this.dragulaService.destroy("bag-tasks");
+  private getTasks(): void {
+    this.dataService.getTasks().subscribe((tasks) => {
+      this.todoTasks = tasks.filter((t) => t.state === 'To Do');
+      this.doingTasks = tasks.filter((t) => t.state === 'In Progress');
+      this.doneTasks = tasks.filter((t) => t.state === 'Done');
+    });
   }
 
-  private getTasks() {
-    this.dataService.getTasks().subscribe((tasks)=>{
-      this.tasks = tasks;
-    })
-  }
-
-  private addTask(title) {
-    const newTask:task = {
-      position: 1,
-      title: title,
-      state: "To Do",
-      _id: null
-    }
-    this.dataService.addTask(newTask).add(()=>{
-      this.getTasks();
-    })
-    return false;
-  }
-
-  private updateTaskThenGetTasks(task) {
-    this.dataService.updateTask(task).add(()=>{
-      this.getTasks();
-    })
-    return false;
-  }
-
-  private updateTasks(bagSource, bagTarget) {
-    for (var i = 0; i < bagSource.children.length; i++) { 
-      this.updateTask(bagSource.children[i].id, bagSource.children[i].textContent, i+1, 
-        bagSource.getAttribute('column-id'));
-    }
-    for (var i = 0; i < bagTarget.children.length; i++) { 
-      this.updateTask(bagTarget.children[i].id, bagTarget.children[i].textContent, i+1, 
-        bagTarget.getAttribute('column-id'));
+  private getStateFromColumnId(columnId: string): string {
+    switch (columnId) {
+      case 'col_doing': return 'In Progress';
+      case 'col_done': return 'Done';
+      default: return 'To Do';
     }
   }
 
-  private updateTask(id, title, position, state) {  
-    const updatedTask:task = {
-      position: position,
-      title: title,
-      state: this.getStateFromColumn(state),
-      _id: id
-    }
-    this.updateTaskThenGetTasks(updatedTask); 
+  private persistColumnOrder(columnId: string, tasks: Task[]): void {
+    const state = this.getStateFromColumnId(columnId);
+    tasks.forEach((task, index) => {
+      this.dataService.updateTask({ ...task, position: index + 1, state }).subscribe();
+    });
   }
 
-  private deleteTask(id) {
-    console.log("Delete: " + id);
-    if (confirm("Are you sure?") == true) {
-      this.dataService.deleteTask(id).add(()=>{
-        this.getTasks();
-      })
-    }   
+  onDrop(event: CdkDragDrop<Task[]>): void {
+    if (event.previousContainer === event.container) {
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    } else {
+      transferArrayItem(
+        event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex,
+      );
+      this.persistColumnOrder(event.previousContainer.id, event.previousContainer.data);
+    }
+    this.persistColumnOrder(event.container.id, event.container.data);
+  }
+
+  addTask(title: string): void {
+    if (!title.trim()) { return; }
+    const newTask: Task = { position: 1, title: title.trim(), state: 'To Do', _id: '' };
+    this.dataService.addTask(newTask).subscribe((created) => {
+      this.todoTasks.push(created);
+    });
+  }
+
+  deleteTask(id: string): void {
+    if (!id) { return; }
+    if (confirm('Are you sure?')) {
+      const prev = { todo: this.todoTasks, doing: this.doingTasks, done: this.doneTasks };
+      this.todoTasks = this.todoTasks.filter((t) => t._id !== id);
+      this.doingTasks = this.doingTasks.filter((t) => t._id !== id);
+      this.doneTasks = this.doneTasks.filter((t) => t._id !== id);
+      this.dataService.deleteTask(id).subscribe({
+        error: () => {
+          this.todoTasks = prev.todo;
+          this.doingTasks = prev.doing;
+          this.doneTasks = prev.done;
+        },
+      });
+    }
   }
 }

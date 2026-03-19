@@ -1,33 +1,30 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { HttpModule } from '@angular/http';
+import { HttpClientModule } from '@angular/common/http';
 import { RouterModule, Routes } from '@angular/router';
-
-import { DragulaModule } from 'ng2-dragula/ng2-dragula';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 import { AppComponent } from './app.component';
 import { TaskComponent } from './components/task/task.component';
 import { AboutComponent } from './components/about/about.component';
-import { DataService } from './services/data.service';
 
 const appRoutes: Routes = [
-  {path:'', component:TaskComponent},
-  {path:'about', component:AboutComponent},
-]
+  { path: '', component: TaskComponent },
+  { path: 'about', component: AboutComponent },
+];
 
 @NgModule({
   declarations: [
     AppComponent,
     TaskComponent,
-    AboutComponent
+    AboutComponent,
   ],
   imports: [
     BrowserModule,
-    HttpModule,
+    HttpClientModule,
     RouterModule.forRoot(appRoutes),
-    DragulaModule
+    DragDropModule,
   ],
-  providers: [DataService],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule { }
