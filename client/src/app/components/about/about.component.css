@@ -1,5 +1,5 @@
 .about {
-  max-width: 560px;
+  max-width: 100%;
 }
 
 .about h1 {
@@ -38,7 +38,7 @@
 .about ul li { color: var(--text-muted); }
 
 .about ul li::before {
-  content: '—';
+  content: '•';
   margin-right: 8px;
   color: var(--border);
 }
