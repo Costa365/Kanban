@@ -1,0 +1,51 @@
+.about {
+  max-width: 560px;
+}
+
+.about h1 {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.4px;
+  margin-bottom: 12px;
+}
+
+.about h2 {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  margin: 28px 0 10px;
+}
+
+.about p {
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+.about strong {
+  color: var(--text);
+  font-weight: 500;
+}
+
+.about ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.about ul li { color: var(--text-muted); }
+
+.about ul li::before {
+  content: '—';
+  margin-right: 8px;
+  color: var(--border);
+}
+
+.about a {
+  color: var(--accent);
+  font-weight: 500;
+}
+
+.about a:hover { text-decoration: underline; }
