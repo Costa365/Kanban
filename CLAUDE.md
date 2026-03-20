@@ -37,8 +37,11 @@ The client's `proxy.conf.json` forwards `/api/*` to `localhost:3000` during `ng 
 ## Architecture
 
 **Client** (`client/src/app/`):
-- Two routes: `/` → `TaskComponent`, `/about` → `AboutComponent`
-- `DataService` is the sole HTTP layer; uses `HttpClient` with relative URL `/api/`
+- Three routes: `/login` → `LoginComponent`, `/` → `TaskComponent` (guarded), `/about` → `AboutComponent` (guarded)
+- `AuthService` handles login/register via `/api/auth/`, stores JWT + email in `localStorage`
+- `AuthInterceptor` attaches `Authorization: Bearer <token>` to all non-auth API requests; auto-logouts on 401
+- `AuthGuard` (`canActivate`) redirects unauthenticated users to `/login`
+- `DataService` is the sole HTTP layer for tasks; uses `HttpClient` with relative URL `/api/`
 - `TaskComponent` holds three separate arrays (`todoTasks`, `doingTasks`, `doneTasks`); add/delete update local state directly (no re-fetch) using the server response
 - Drag-and-drop uses `@angular/cdk/drag-drop` (`cdkDropListGroup` on the board, `cdkDropList` per column); on drop, `persistColumnOrder()` PUTs every task in the affected column(s)
 - Inline editing: clicking the pencil icon on a card sets `editingId`; an auto-resizing `<textarea>` with `appAutoFocus` replaces the rendered content; Ctrl+Enter or blur saves, Escape cancels
@@ -50,13 +53,17 @@ The client's `proxy.conf.json` forwards `/api/*` to `localhost:3000` during `ng 
 
 **Server** (`server/`):
 - Express on port 3000
-- REST API under `/api/`: `GET /tasks`, `POST /task`, `PUT /task/:id`, `DELETE /task/:id`
+- Auth routes (public): `POST /api/auth/register`, `POST /api/auth/login` — returns `{ token, email }`; passwords hashed with `bcryptjs`, JWTs signed with `jsonwebtoken` (secret from `JWT_SECRET` env var)
+- Auth middleware (`middleware/auth.js`) verifies JWT on all `/api/` task routes, attaches `req.user = { id, email }`
+- Task routes (protected): `GET /tasks`, `POST /task`, `PUT /task/:id`, `DELETE /task/:id`
+- All task queries are scoped by `userId` (the authenticated user's MongoDB `_id`)
+- On first `GET /tasks`, orphaned tasks (no `userId` field) are migrated to the current user
 - MongoDB via the official `mongodb` driver; connection URI from `MONGODB_URI` env var (defaults to `mongodb://localhost:27017`)
-- Collection `tasks`; fields: `title` (raw Markdown string), `state` ("To Do" | "In Progress" | "Done"), `position` (int), `date`
+- Collections: `users` (email, password hash; unique index on email), `tasks` (title, state, position, date, userId; compound index on `{ userId, date, position }`)
 - Tasks returned sorted by date descending, then position ascending
 - PUT and DELETE validate the `:id` param with `ObjectId.isValid()` before querying
 
 **Docker** (root `docker-compose.yml`):
 - `client`: multi-stage build (Node build → nginx); nginx proxies `/api/` to the `server` container and serves Angular with HTML5 pushstate fallback
-- `server`: Node 22 Alpine, inherits `MONGODB_URI=mongodb://mongo:27017`
+- `server`: Node 22 Alpine, inherits `MONGODB_URI=mongodb://mongo:27017` and `JWT_SECRET`
 - `mongo`: official Mongo 7 image with a named volume for persistence

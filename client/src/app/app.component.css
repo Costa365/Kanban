@@ -36,6 +36,39 @@ nav a {
 nav a:hover { color: #fff; background: rgba(255, 255, 255, 0.15); }
 nav a.active { color: #fff; background: rgba(255, 255, 255, 0.2); }
 
+.spacer { flex: 1; }
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+}
+
+.user-email {
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.sign-out-btn {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 7px;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.85);
+  cursor: pointer;
+  transition: background 150ms ease, color 150ms ease;
+  flex-shrink: 0;
+}
+
+.sign-out-btn:hover { background: rgba(255, 255, 255, 0.25); color: #fff; }
+
 .theme-toggle {
   background: rgba(255, 255, 255, 0.15);
   border: 1px solid rgba(255, 255, 255, 0.25);

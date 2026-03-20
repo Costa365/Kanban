@@ -1,0 +1,19 @@
+<div class="login-container">
+  <div class="login-card">
+    <h1 class="login-title">Kanban</h1>
+    <p class="login-subtitle">{{ isRegister ? 'Create an account' : 'Sign in to your board' }}</p>
+
+    <div class="error" *ngIf="error">{{ error }}</div>
+
+    <form (submit)="submit(); $event.preventDefault()">
+      <input class="input" type="email" placeholder="Email" [(ngModel)]="email" name="email" required autocomplete="email">
+      <input class="input" type="password" placeholder="Password" [(ngModel)]="password" name="password" required autocomplete="current-password">
+      <button class="btn btn-primary submit-btn" type="submit">{{ isRegister ? 'Create account' : 'Sign in' }}</button>
+    </form>
+
+    <p class="toggle-text">
+      {{ isRegister ? 'Already have an account?' : "Don't have an account?" }}
+      <a class="toggle-link" (click)="toggleMode()">{{ isRegister ? 'Sign in' : 'Create one' }}</a>
+    </p>
+  </div>
+</div>

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthService } from './services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -8,6 +9,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AppComponent implements OnInit {
   theme: 'light' | 'dark' = 'light';
+
+  constructor(public authService: AuthService) {}
 
   ngOnInit(): void {
     const stored = localStorage.getItem('theme');
@@ -23,5 +26,9 @@ export class AppComponent implements OnInit {
     this.theme = this.theme === 'light' ? 'dark' : 'light';
     localStorage.setItem('theme', this.theme);
     document.documentElement.setAttribute('data-theme', this.theme);
+  }
+
+  logout(): void {
+    this.authService.logout();
   }
 }

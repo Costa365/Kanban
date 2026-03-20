@@ -9,10 +9,11 @@ let db;
 async function connectDB() {
   await client.connect();
   db = client.db('tasklist');
+  await col().createIndex({ userId: 1, date: -1, position: 1 });
+  await db.collection('users').createIndex({ email: 1 }, { unique: true });
   console.log('Connected to MongoDB');
+  return db;
 }
-
-connectDB().catch(console.error);
 
 function col() {
   return db.collection('tasks');
@@ -21,7 +22,15 @@ function col() {
 // Get all tasks
 router.get('/tasks', async (req, res) => {
   try {
-    const tasks = await col().find().sort({ date: -1, position: 1 }).toArray();
+    const userId = req.user.id;
+
+    // One-time migration: assign orphaned tasks to the first user who logs in
+    const orphaned = await col().countDocuments({ userId: { $exists: false } });
+    if (orphaned > 0) {
+      await col().updateMany({ userId: { $exists: false } }, { $set: { userId } });
+    }
+
+    const tasks = await col().find({ userId }).sort({ date: -1, position: 1 }).toArray();
     res.json(tasks);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -35,9 +44,11 @@ router.post('/task', async (req, res) => {
     return res.status(400).json({ error: 'Bad Data' });
   }
   try {
-    const count = await col().countDocuments();
+    const userId = req.user.id;
+    task.userId = userId;
+    const count = await col().countDocuments({ userId });
     if (count > 0) {
-      const [last] = await col().find().sort({ position: -1 }).limit(1).toArray();
+      const [last] = await col().find({ userId }).sort({ position: -1 }).limit(1).toArray();
       task.position = parseInt(last.position, 10) + 1;
     } else {
       task.position = 1;
@@ -56,9 +67,9 @@ router.put('/task/:id', async (req, res) => {
     return res.status(400).json({ error: 'Invalid task ID' });
   }
   try {
-    const { _id, ...taskData } = req.body;
+    const { _id, userId: _u, ...taskData } = req.body;
     const result = await col().updateOne(
-      { _id: new ObjectId(req.params.id) },
+      { _id: new ObjectId(req.params.id), userId: req.user.id },
       { $set: taskData },
     );
     res.json(result);
@@ -73,7 +84,7 @@ router.delete('/task/:id', async (req, res) => {
     return res.status(400).json({ error: 'Invalid task ID' });
   }
   try {
-    const result = await col().deleteOne({ _id: new ObjectId(req.params.id) });
+    const result = await col().deleteOne({ _id: new ObjectId(req.params.id), userId: req.user.id });
     res.json(result);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -81,3 +92,4 @@ router.delete('/task/:id', async (req, res) => {
 });
 
 module.exports = router;
+module.exports.connectDB = connectDB;
