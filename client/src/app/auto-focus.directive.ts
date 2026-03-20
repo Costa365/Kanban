@@ -2,10 +2,13 @@ import { AfterViewInit, Directive, ElementRef } from '@angular/core';
 
 @Directive({ selector: '[appAutoFocus]', standalone: false })
 export class AutoFocusDirective implements AfterViewInit {
-  constructor(private el: ElementRef<HTMLInputElement>) {}
+  constructor(private el: ElementRef<HTMLTextAreaElement>) {}
 
   ngAfterViewInit(): void {
-    this.el.nativeElement.focus();
-    this.el.nativeElement.select();
+    const el = this.el.nativeElement;
+    el.focus();
+    el.select();
+    el.style.height = 'auto';
+    el.style.height = `${el.scrollHeight}px`;
   }
 }

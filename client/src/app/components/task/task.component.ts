@@ -69,9 +69,33 @@ export class TaskComponent implements OnInit {
     });
   }
 
+  onAddKeydown(event: KeyboardEvent, el: HTMLTextAreaElement): void {
+    if (event.key === 'Enter' && (event.ctrlKey || event.metaKey)) {
+      event.preventDefault();
+      this.addTask(el.value);
+      el.value = '';
+      el.style.height = 'auto';
+    }
+  }
+
   startEdit(task: Task): void {
     this.editingId = task._id;
     this.editingTitle = task.title;
+  }
+
+  onEditKeydown(event: KeyboardEvent, task: Task, el: HTMLTextAreaElement): void {
+    if (event.key === 'Enter' && (event.ctrlKey || event.metaKey)) {
+      event.preventDefault();
+      el.blur();
+    }
+    if (event.key === 'Escape') {
+      this.cancelEdit();
+    }
+  }
+
+  autoResize(el: HTMLTextAreaElement): void {
+    el.style.height = 'auto';
+    el.style.height = `${el.scrollHeight}px`;
   }
 
   saveEdit(task: Task, newTitle: string): void {

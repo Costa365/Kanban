@@ -39,16 +39,22 @@ The client's `proxy.conf.json` forwards `/api/*` to `localhost:3000` during `ng 
 **Client** (`client/src/app/`):
 - Two routes: `/` → `TaskComponent`, `/about` → `AboutComponent`
 - `DataService` is the sole HTTP layer; uses `HttpClient` with relative URL `/api/`
-- `TaskComponent` holds three separate arrays (`todoTasks`, `doingTasks`, `doneTasks`) — the board re-fetches all tasks from the API after every mutation
-- Drag-and-drop between columns uses `@angular/cdk/drag-drop` (`cdkDropListGroup` on the row, `cdkDropList` per column); on drop, `persistColumnOrder()` updates every task in the affected column(s)
-- `Task` interface is defined and exported from `components/task/task.ts`
+- `TaskComponent` holds three separate arrays (`todoTasks`, `doingTasks`, `doneTasks`); add/delete update local state directly (no re-fetch) using the server response
+- Drag-and-drop uses `@angular/cdk/drag-drop` (`cdkDropListGroup` on the board, `cdkDropList` per column); on drop, `persistColumnOrder()` PUTs every task in the affected column(s)
+- Inline editing: clicking the pencil icon on a card sets `editingId`; an auto-resizing `<textarea>` with `appAutoFocus` replaces the rendered content; Ctrl+Enter or blur saves, Escape cancels
+- Task content is stored as raw Markdown and rendered via `MarkdownPipe` (wraps `marked`) into `[innerHTML]`; Angular's built-in sanitiser handles XSS
+- `Task` interface exported from `components/task/task.ts`
+- `AutoFocusDirective` (`auto-focus.directive.ts`) focuses and selects a textarea on render, also triggers initial auto-resize
+- `MarkdownPipe` (`markdown.pipe.ts`) wraps `marked` with `breaks: true, gfm: true`
+- Light/dark mode: `AppComponent` reads `localStorage` and `prefers-color-scheme`, sets `data-theme` on `<html>`; all colours are CSS custom properties on `:root`
 
 **Server** (`server/`):
 - Express on port 3000
 - REST API under `/api/`: `GET /tasks`, `POST /task`, `PUT /task/:id`, `DELETE /task/:id`
 - MongoDB via the official `mongodb` driver; connection URI from `MONGODB_URI` env var (defaults to `mongodb://localhost:27017`)
-- Collection `tasks`; fields: `title`, `state` ("To Do" | "In Progress" | "Done"), `position` (int), `date`
+- Collection `tasks`; fields: `title` (raw Markdown string), `state` ("To Do" | "In Progress" | "Done"), `position` (int), `date`
 - Tasks returned sorted by date descending, then position ascending
+- PUT and DELETE validate the `:id` param with `ObjectId.isValid()` before querying
 
 **Docker** (root `docker-compose.yml`):
 - `client`: multi-stage build (Node build → nginx); nginx proxies `/api/` to the `server` container and serves Angular with HTML5 pushstate fallback

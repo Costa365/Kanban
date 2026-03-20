@@ -8,6 +8,7 @@ import { AppComponent } from './app.component';
 import { TaskComponent } from './components/task/task.component';
 import { AboutComponent } from './components/about/about.component';
 import { AutoFocusDirective } from './auto-focus.directive';
+import { MarkdownPipe } from './markdown.pipe';
 
 const appRoutes: Routes = [
   { path: '', component: TaskComponent },
@@ -20,6 +21,7 @@ const appRoutes: Routes = [
     TaskComponent,
     AboutComponent,
     AutoFocusDirective,
+    MarkdownPipe,
   ],
   imports: [
     BrowserModule,

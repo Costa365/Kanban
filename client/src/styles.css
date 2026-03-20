@@ -60,6 +60,42 @@ body {
 
 a { color: inherit; text-decoration: none; }
 
+/* ── Markdown rendered content ───────────────────────── */
+.markdown-body { font-size: 14px; line-height: 1.6; flex: 1; min-width: 0; }
+.markdown-body > *:last-child { margin-bottom: 0; }
+.markdown-body p { margin-bottom: 0.4em; }
+.markdown-body ul, .markdown-body ol { padding-left: 1.3em; margin-bottom: 0.4em; }
+.markdown-body li { margin-bottom: 0.1em; }
+.markdown-body h1 { font-size: 1.15em; font-weight: 700; margin-bottom: 0.3em; }
+.markdown-body h2 { font-size: 1.05em; font-weight: 600; margin-bottom: 0.3em; }
+.markdown-body h3 { font-size: 1em;    font-weight: 600; margin-bottom: 0.2em; }
+.markdown-body strong { font-weight: 600; }
+.markdown-body em { font-style: italic; }
+.markdown-body a { color: var(--accent); }
+.markdown-body a:hover { text-decoration: underline; }
+.markdown-body code {
+  background: color-mix(in srgb, var(--text) 8%, transparent);
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 0.88em;
+}
+.markdown-body pre {
+  background: color-mix(in srgb, var(--text) 8%, transparent);
+  border-radius: 6px;
+  padding: 8px 12px;
+  overflow-x: auto;
+  margin-bottom: 0.4em;
+}
+.markdown-body pre code { background: none; padding: 0; }
+.markdown-body blockquote {
+  border-left: 3px solid var(--border);
+  padding-left: 0.75em;
+  color: var(--text-muted);
+  margin-bottom: 0.4em;
+}
+.markdown-body hr { border: none; border-top: 1px solid var(--border); margin: 0.5em 0; }
+
 /* ── CDK drag-drop ───────────────────────────────────── */
 .cdk-drag-preview {
   background: var(--surface);

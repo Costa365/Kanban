@@ -1,5 +1,8 @@
-<form class="add-form" (submit)="addTask(title.value); title.value = ''; $event.preventDefault()">
-  <input class="add-input" type="text" placeholder="Add a new task…" autocomplete="off" #title>
+<form class="add-form" (submit)="addTask(title.value); title.value = ''; title.style.height = 'auto'; $event.preventDefault()">
+  <textarea class="add-input" placeholder="Add a new task… (Ctrl+Enter to submit)" autocomplete="off"
+            rows="1" #title
+            (keydown)="onAddKeydown($event, title)"
+            (input)="autoResize(title)"></textarea>
   <button class="btn btn-primary" type="submit">Add task</button>
 </form>
 
@@ -16,13 +19,14 @@
       <div *ngFor="let task of todoTasks" cdkDrag class="task-card todo-card"
            [cdkDragDisabled]="editingId === task._id">
         <ng-container *ngIf="editingId === task._id; else vTodo">
-          <input class="edit-input" appAutoFocus [value]="editingTitle" #ei
-                 (keydown.enter)="saveEdit(task, ei.value)"
-                 (keydown.escape)="cancelEdit()"
-                 (blur)="saveEdit(task, ei.value)">
+          <textarea class="edit-input" appAutoFocus [value]="editingTitle" #ei
+                    (keydown)="onEditKeydown($event, task, ei)"
+                    (blur)="saveEdit(task, ei.value)"
+                    (input)="autoResize(ei)"></textarea>
+          <span class="edit-hint">Ctrl+Enter to save &middot; Esc to cancel</span>
         </ng-container>
         <ng-template #vTodo>
-          <span class="task-title">{{ task.title }}</span>
+          <div class="markdown-body" [innerHTML]="task.title | markdown"></div>
           <div class="card-actions">
             <button class="action-btn" type="button" (click)="startEdit(task)" title="Edit">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -48,13 +52,14 @@
       <div *ngFor="let task of doingTasks" cdkDrag class="task-card doing-card"
            [cdkDragDisabled]="editingId === task._id">
         <ng-container *ngIf="editingId === task._id; else vDoing">
-          <input class="edit-input" appAutoFocus [value]="editingTitle" #ei
-                 (keydown.enter)="saveEdit(task, ei.value)"
-                 (keydown.escape)="cancelEdit()"
-                 (blur)="saveEdit(task, ei.value)">
+          <textarea class="edit-input" appAutoFocus [value]="editingTitle" #ei
+                    (keydown)="onEditKeydown($event, task, ei)"
+                    (blur)="saveEdit(task, ei.value)"
+                    (input)="autoResize(ei)"></textarea>
+          <span class="edit-hint">Ctrl+Enter to save &middot; Esc to cancel</span>
         </ng-container>
         <ng-template #vDoing>
-          <span class="task-title">{{ task.title }}</span>
+          <div class="markdown-body" [innerHTML]="task.title | markdown"></div>
           <div class="card-actions">
             <button class="action-btn" type="button" (click)="startEdit(task)" title="Edit">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -80,13 +85,14 @@
       <div *ngFor="let task of doneTasks" cdkDrag class="task-card done-card"
            [cdkDragDisabled]="editingId === task._id">
         <ng-container *ngIf="editingId === task._id; else vDone">
-          <input class="edit-input" appAutoFocus [value]="editingTitle" #ei
-                 (keydown.enter)="saveEdit(task, ei.value)"
-                 (keydown.escape)="cancelEdit()"
-                 (blur)="saveEdit(task, ei.value)">
+          <textarea class="edit-input" appAutoFocus [value]="editingTitle" #ei
+                    (keydown)="onEditKeydown($event, task, ei)"
+                    (blur)="saveEdit(task, ei.value)"
+                    (input)="autoResize(ei)"></textarea>
+          <span class="edit-hint">Ctrl+Enter to save &middot; Esc to cancel</span>
         </ng-container>
         <ng-template #vDone>
-          <span class="task-title">{{ task.title }}</span>
+          <div class="markdown-body" [innerHTML]="task.title | markdown"></div>
           <div class="card-actions">
             <button class="action-btn" type="button" (click)="startEdit(task)" title="Edit">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
