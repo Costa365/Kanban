@@ -1,85 +1,200 @@
-input {
-    margin-left: 10px;
+/* ── Add form ─────────────────────────────────────────── */
+.add-form {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
 }
 
-.task_todo {
-    background:#f3bdb9;
-    border-color: #ee3434;
-    border-width: 2px;
-    border-style: solid;
-    margin: 0px 10px 10px 10px;
-    width: auto;
-    text-align: center;
+.add-input {
+  flex: 1;
+  padding: 9px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 14px;
+  font-family: inherit;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+  outline: none;
 }
 
-.task_doing {
-    background:#f0c493;
-    border-color: #f08d32;
-    border-width: 2px;
-    border-style: solid;
-    margin: 0px 10px 10px 10px;
-    width: auto;
-    text-align: center;
+.add-input::placeholder { color: var(--text-muted); }
+
+.add-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 15%, transparent);
 }
 
-.task_done {
-    background:#c9f07b;
-    border-color: #009000;
-    border-width: 2px;
-    border-style: solid;
-    margin: 0px 10px 10px 10px;
-    width: auto;
-    text-align: center;
+/* ── Buttons ──────────────────────────────────────────── */
+.btn {
+  padding: 9px 16px;
+  border-radius: var(--radius);
+  font-size: 14px;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: background 150ms ease, box-shadow 150ms ease;
 }
 
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+}
+.btn-primary:hover { background: var(--accent-h); }
+
+.btn-secondary {
+  background: var(--column-bg);
+  border-color: var(--border);
+  color: var(--text);
+}
+.btn-secondary:hover { background: var(--border); }
+
+.btn-danger {
+  background: var(--danger);
+  color: #fff;
+}
+.btn-danger:hover { background: var(--danger-h); }
+
+/* ── Board ────────────────────────────────────────────── */
+.board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+
+@media (max-width: 700px) {
+  .board { grid-template-columns: 1fr; }
+}
+
+/* ── Column ───────────────────────────────────────────── */
 .column {
-    float: left;
-    width: 33.33%;
-    text-align: center;
+  background: var(--column-bg);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  overflow: hidden;
 }
 
-/* Clear floats after the columns */
-.row:after {
-    content: "";
-    display: table;
-    clear: both;
+.column-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
 }
 
-.container {
-    min-height: 100px;
+.column-title {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
 }
 
-button {
-    margin: 0 0 0 4px;
+.count-badge {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 12px;
 }
 
-button.minimal {
-    background: #e3e3e3;
-    border: 1px solid #bbb;
-    border-radius: 3px;
-    -webkit-box-shadow: inset 0 0 1px 1px #f6f6f6;
-    box-shadow: inset 0 0 1px 1px #f6f6f6;
-    color: #333;
-    padding: 3px 0 3px;
-    text-align: center;
-    text-shadow: 0 0px 0 #fff;
-    width: 80px; }
-    button.minimal:hover {
-      background: #d9d9d9;
-      -webkit-box-shadow: inset 0 0 1px 1px #eaeaea;
-      box-shadow: inset 0 0 1px 1px #eaeaea;
-      color: #222;
-      cursor: pointer; }
-    button.minimal:active {
-      background: #d0d0d0;
-      -webkit-box-shadow: inset 0 0 1px 1px #e3e3e3;
-      box-shadow: inset 0 0 1px 1px #e3e3e3;
-      color: #000; }
+.todo-badge  { background: color-mix(in srgb, var(--todo)  12%, transparent); color: var(--todo); }
+.doing-badge { background: color-mix(in srgb, var(--doing) 12%, transparent); color: var(--doing); }
+.done-badge  { background: color-mix(in srgb, var(--done)  12%, transparent); color: var(--done); }
 
-.task-button {
-    border: none;
-    padding: 0;
-    background: none;
-    float: right;
-    margin: 1px 1px 0px 0px;
-  }
+/* ── Task list ────────────────────────────────────────── */
+.task-list {
+  padding: 10px;
+  min-height: 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* ── Task card ────────────────────────────────────────── */
+.task-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid transparent;
+  border-radius: 8px;
+  cursor: grab;
+  transition: box-shadow 150ms ease, transform 150ms ease;
+}
+
+.task-card:active { cursor: grabbing; }
+
+.task-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transform: translateY(-1px);
+}
+
+.todo-card  { border-left-color: var(--todo); }
+.doing-card { border-left-color: var(--doing); }
+.done-card  { border-left-color: var(--done); }
+
+.task-title {
+  flex: 1;
+  font-size: 14px;
+  word-break: break-word;
+}
+
+.delete-btn {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 15px;
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 4px;
+  line-height: 1;
+  opacity: 0;
+  transition: opacity 150ms ease, color 150ms ease, background 150ms ease;
+}
+
+.task-card:hover .delete-btn { opacity: 1; }
+.delete-btn:hover { color: var(--danger); background: color-mix(in srgb, var(--danger) 10%, transparent); }
+
+/* ── Modal ────────────────────────────────────────────── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+}
+
+.modal {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 24px;
+  width: 300px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+}
+
+.modal-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.modal-body {
+  color: var(--text-muted);
+  margin-bottom: 20px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}

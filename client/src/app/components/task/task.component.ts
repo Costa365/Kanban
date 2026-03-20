@@ -13,6 +13,7 @@ export class TaskComponent implements OnInit {
   todoTasks: Task[] = [];
   doingTasks: Task[] = [];
   doneTasks: Task[] = [];
+  pendingDeleteId: string | null = null;
 
   constructor(private dataService: DataService) {}
 
@@ -68,18 +69,27 @@ export class TaskComponent implements OnInit {
 
   deleteTask(id: string): void {
     if (!id) { return; }
-    if (confirm('Are you sure?')) {
-      const prev = { todo: this.todoTasks, doing: this.doingTasks, done: this.doneTasks };
-      this.todoTasks = this.todoTasks.filter((t) => t._id !== id);
-      this.doingTasks = this.doingTasks.filter((t) => t._id !== id);
-      this.doneTasks = this.doneTasks.filter((t) => t._id !== id);
-      this.dataService.deleteTask(id).subscribe({
-        error: () => {
-          this.todoTasks = prev.todo;
-          this.doingTasks = prev.doing;
-          this.doneTasks = prev.done;
-        },
-      });
-    }
+    this.pendingDeleteId = id;
+  }
+
+  confirmDelete(): void {
+    const id = this.pendingDeleteId;
+    if (!id) { return; }
+    this.pendingDeleteId = null;
+    const prev = { todo: this.todoTasks, doing: this.doingTasks, done: this.doneTasks };
+    this.todoTasks = this.todoTasks.filter((t) => t._id !== id);
+    this.doingTasks = this.doingTasks.filter((t) => t._id !== id);
+    this.doneTasks = this.doneTasks.filter((t) => t._id !== id);
+    this.dataService.deleteTask(id).subscribe({
+      error: () => {
+        this.todoTasks = prev.todo;
+        this.doingTasks = prev.doing;
+        this.doneTasks = prev.done;
+      },
+    });
+  }
+
+  cancelDelete(): void {
+    this.pendingDeleteId = null;
   }
 }

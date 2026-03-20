@@ -1,51 +1,65 @@
-<hr />
-<form (submit)="addTask(title.value); title.value = ''; $event.preventDefault()">
-  <div>
-    <input id="title" type="text" placeholder="New task" autocomplete="off" #title>
-    <button class="minimal" type="submit">Submit</button>
-  </div>
+<form class="add-form" (submit)="addTask(title.value); title.value = ''; $event.preventDefault()">
+  <input class="add-input" type="text" placeholder="Add a new task…" autocomplete="off" #title>
+  <button class="btn btn-primary" type="submit">Add task</button>
 </form>
 
-<hr />
+<div class="board" cdkDropListGroup>
 
-<div class="row" cdkDropListGroup>
   <div class="column">
-    <b>To Do</b>
-    <div class="container" cdkDropList id="col_to_do"
+    <div class="column-header">
+      <span class="column-title">To Do</span>
+      <span class="count-badge todo-badge">{{ todoTasks.length }}</span>
+    </div>
+    <div class="task-list" cdkDropList id="col_to_do"
          [cdkDropListData]="todoTasks"
          (cdkDropListDropped)="onDrop($event)">
-      <div *ngFor="let task of todoTasks" cdkDrag class="task_todo">
-        <button class="task-button" type="button" (click)="deleteTask(task._id)">
-          <img src="assets/img/delete.png" alt="delete"/>
-        </button>
-        {{task.title}}
+      <div *ngFor="let task of todoTasks" cdkDrag class="task-card todo-card">
+        <span class="task-title">{{ task.title }}</span>
+        <button class="delete-btn" type="button" (click)="deleteTask(task._id)" title="Delete">&#x2715;</button>
       </div>
     </div>
   </div>
+
   <div class="column">
-    <b>Doing</b>
-    <div class="container" cdkDropList id="col_doing"
+    <div class="column-header">
+      <span class="column-title">In Progress</span>
+      <span class="count-badge doing-badge">{{ doingTasks.length }}</span>
+    </div>
+    <div class="task-list" cdkDropList id="col_doing"
          [cdkDropListData]="doingTasks"
          (cdkDropListDropped)="onDrop($event)">
-      <div *ngFor="let task of doingTasks" cdkDrag class="task_doing">
-        <button class="task-button" type="button" (click)="deleteTask(task._id)">
-          <img src="assets/img/delete.png" alt="delete"/>
-        </button>
-        {{task.title}}
+      <div *ngFor="let task of doingTasks" cdkDrag class="task-card doing-card">
+        <span class="task-title">{{ task.title }}</span>
+        <button class="delete-btn" type="button" (click)="deleteTask(task._id)" title="Delete">&#x2715;</button>
       </div>
     </div>
   </div>
+
   <div class="column">
-    <b>Done</b>
-    <div class="container" cdkDropList id="col_done"
+    <div class="column-header">
+      <span class="column-title">Done</span>
+      <span class="count-badge done-badge">{{ doneTasks.length }}</span>
+    </div>
+    <div class="task-list" cdkDropList id="col_done"
          [cdkDropListData]="doneTasks"
          (cdkDropListDropped)="onDrop($event)">
-      <div *ngFor="let task of doneTasks" cdkDrag class="task_done">
-        <button class="task-button" type="button" (click)="deleteTask(task._id)">
-          <img src="assets/img/delete.png" alt="delete"/>
-        </button>
-        {{task.title}}
+      <div *ngFor="let task of doneTasks" cdkDrag class="task-card done-card">
+        <span class="task-title">{{ task.title }}</span>
+        <button class="delete-btn" type="button" (click)="deleteTask(task._id)" title="Delete">&#x2715;</button>
       </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Delete confirmation modal -->
+<div class="modal-overlay" *ngIf="pendingDeleteId" (click)="cancelDelete()">
+  <div class="modal" (click)="$event.stopPropagation()">
+    <p class="modal-title">Delete this task?</p>
+    <p class="modal-body">This cannot be undone.</p>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" type="button" (click)="cancelDelete()">Cancel</button>
+      <button class="btn btn-danger" type="button" (click)="confirmDelete()">Delete</button>
     </div>
   </div>
 </div>
