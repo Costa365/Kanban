@@ -7,6 +7,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { AppComponent } from './app.component';
 import { TaskComponent } from './components/task/task.component';
 import { AboutComponent } from './components/about/about.component';
+import { AutoFocusDirective } from './auto-focus.directive';
 
 const appRoutes: Routes = [
   { path: '', component: TaskComponent },
@@ -18,6 +19,7 @@ const appRoutes: Routes = [
     AppComponent,
     TaskComponent,
     AboutComponent,
+    AutoFocusDirective,
   ],
   imports: [
     BrowserModule,

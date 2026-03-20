@@ -14,6 +14,8 @@ export class TaskComponent implements OnInit {
   doingTasks: Task[] = [];
   doneTasks: Task[] = [];
   pendingDeleteId: string | null = null;
+  editingId: string | null = null;
+  editingTitle = '';
 
   constructor(private dataService: DataService) {}
 
@@ -65,6 +67,28 @@ export class TaskComponent implements OnInit {
     this.dataService.addTask(newTask).subscribe((created) => {
       this.todoTasks.push(created);
     });
+  }
+
+  startEdit(task: Task): void {
+    this.editingId = task._id;
+    this.editingTitle = task.title;
+  }
+
+  saveEdit(task: Task, newTitle: string): void {
+    if (!this.editingId) { return; }
+    this.editingId = null;
+    const trimmed = newTitle.trim();
+    if (!trimmed || trimmed === task.title) { return; }
+    const updated = { ...task, title: trimmed };
+    const replace = (arr: Task[]) => arr.map((t) => t._id === task._id ? updated : t);
+    this.todoTasks = replace(this.todoTasks);
+    this.doingTasks = replace(this.doingTasks);
+    this.doneTasks = replace(this.doneTasks);
+    this.dataService.updateTask(updated).subscribe();
+  }
+
+  cancelEdit(): void {
+    this.editingId = null;
   }
 
   deleteTask(id: string): void {

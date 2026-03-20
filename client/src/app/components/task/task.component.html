@@ -13,9 +13,26 @@
     <div class="task-list" cdkDropList id="col_to_do"
          [cdkDropListData]="todoTasks"
          (cdkDropListDropped)="onDrop($event)">
-      <div *ngFor="let task of todoTasks" cdkDrag class="task-card todo-card">
-        <span class="task-title">{{ task.title }}</span>
-        <button class="delete-btn" type="button" (click)="deleteTask(task._id)" title="Delete">&#x2715;</button>
+      <div *ngFor="let task of todoTasks" cdkDrag class="task-card todo-card"
+           [cdkDragDisabled]="editingId === task._id">
+        <ng-container *ngIf="editingId === task._id; else vTodo">
+          <input class="edit-input" appAutoFocus [value]="editingTitle" #ei
+                 (keydown.enter)="saveEdit(task, ei.value)"
+                 (keydown.escape)="cancelEdit()"
+                 (blur)="saveEdit(task, ei.value)">
+        </ng-container>
+        <ng-template #vTodo>
+          <span class="task-title">{{ task.title }}</span>
+          <div class="card-actions">
+            <button class="action-btn" type="button" (click)="startEdit(task)" title="Edit">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+              </svg>
+            </button>
+            <button class="action-btn delete-btn" type="button" (click)="deleteTask(task._id)" title="Delete">&#x2715;</button>
+          </div>
+        </ng-template>
       </div>
     </div>
   </div>
@@ -28,9 +45,26 @@
     <div class="task-list" cdkDropList id="col_doing"
          [cdkDropListData]="doingTasks"
          (cdkDropListDropped)="onDrop($event)">
-      <div *ngFor="let task of doingTasks" cdkDrag class="task-card doing-card">
-        <span class="task-title">{{ task.title }}</span>
-        <button class="delete-btn" type="button" (click)="deleteTask(task._id)" title="Delete">&#x2715;</button>
+      <div *ngFor="let task of doingTasks" cdkDrag class="task-card doing-card"
+           [cdkDragDisabled]="editingId === task._id">
+        <ng-container *ngIf="editingId === task._id; else vDoing">
+          <input class="edit-input" appAutoFocus [value]="editingTitle" #ei
+                 (keydown.enter)="saveEdit(task, ei.value)"
+                 (keydown.escape)="cancelEdit()"
+                 (blur)="saveEdit(task, ei.value)">
+        </ng-container>
+        <ng-template #vDoing>
+          <span class="task-title">{{ task.title }}</span>
+          <div class="card-actions">
+            <button class="action-btn" type="button" (click)="startEdit(task)" title="Edit">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+              </svg>
+            </button>
+            <button class="action-btn delete-btn" type="button" (click)="deleteTask(task._id)" title="Delete">&#x2715;</button>
+          </div>
+        </ng-template>
       </div>
     </div>
   </div>
@@ -43,9 +77,26 @@
     <div class="task-list" cdkDropList id="col_done"
          [cdkDropListData]="doneTasks"
          (cdkDropListDropped)="onDrop($event)">
-      <div *ngFor="let task of doneTasks" cdkDrag class="task-card done-card">
-        <span class="task-title">{{ task.title }}</span>
-        <button class="delete-btn" type="button" (click)="deleteTask(task._id)" title="Delete">&#x2715;</button>
+      <div *ngFor="let task of doneTasks" cdkDrag class="task-card done-card"
+           [cdkDragDisabled]="editingId === task._id">
+        <ng-container *ngIf="editingId === task._id; else vDone">
+          <input class="edit-input" appAutoFocus [value]="editingTitle" #ei
+                 (keydown.enter)="saveEdit(task, ei.value)"
+                 (keydown.escape)="cancelEdit()"
+                 (blur)="saveEdit(task, ei.value)">
+        </ng-container>
+        <ng-template #vDone>
+          <span class="task-title">{{ task.title }}</span>
+          <div class="card-actions">
+            <button class="action-btn" type="button" (click)="startEdit(task)" title="Edit">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+              </svg>
+            </button>
+            <button class="action-btn delete-btn" type="button" (click)="deleteTask(task._id)" title="Delete">&#x2715;</button>
+          </div>
+        </ng-template>
       </div>
     </div>
   </div>
