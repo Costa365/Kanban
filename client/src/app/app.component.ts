@@ -9,6 +9,7 @@ import { AuthService } from './services/auth.service';
 })
 export class AppComponent implements OnInit {
   theme: 'light' | 'dark' = 'light';
+  menuOpen = false;
 
   constructor(public authService: AuthService) {}
 
@@ -28,7 +29,16 @@ export class AppComponent implements OnInit {
     document.documentElement.setAttribute('data-theme', this.theme);
   }
 
+  toggleMenu(): void {
+    this.menuOpen = !this.menuOpen;
+  }
+
+  closeMenu(): void {
+    this.menuOpen = false;
+  }
+
   logout(): void {
+    this.closeMenu();
     this.authService.logout();
   }
 }

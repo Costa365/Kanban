@@ -51,6 +51,7 @@ The client's `proxy.conf.json` forwards `/api/*` to `localhost:3000` during `ng 
 - `AutoFocusDirective` (`auto-focus.directive.ts`) focuses and selects a textarea on render, also triggers initial auto-resize
 - `MarkdownPipe` (`markdown.pipe.ts`) wraps `marked` with `breaks: true, gfm: true`
 - Light/dark mode: `AppComponent` reads `localStorage` and `prefers-color-scheme`, sets `data-theme` on `<html>`; all colours are CSS custom properties on `:root`
+- Responsive header: on mobile (<=600px) nav links, email, and sign-out collapse into a hamburger menu dropdown; `menuOpen` state on `AppComponent` toggles the menu; a backdrop overlay closes it on outside tap
 
 **Server** (`server/`):
 - Express on port 3000
