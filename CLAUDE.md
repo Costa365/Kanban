@@ -44,7 +44,8 @@ The client's `proxy.conf.json` forwards `/api/*` to `localhost:3000` during `ng 
 - `DataService` is the sole HTTP layer for tasks; uses `HttpClient` with relative URL `/api/`
 - `TaskComponent` holds three separate arrays (`todoTasks`, `doingTasks`, `doneTasks`); add/delete update local state directly (no re-fetch) using the server response
 - Drag-and-drop uses `@angular/cdk/drag-drop` (`cdkDropListGroup` on the board, `cdkDropList` per column); on drop, `persistColumnOrder()` PUTs every task in the affected column(s)
-- Inline editing: clicking the pencil icon on a card sets `editingId`; an auto-resizing `<textarea>` with `appAutoFocus` replaces the rendered content; Ctrl+Enter or blur saves, Escape cancels
+- Adding tasks: clicking "+ Add task" creates an inline editable card at the top of To Do with Save/Cancel buttons; on Save the task is POSTed to the server
+- Inline editing: clicking the pencil icon on a card sets `editingId`; an auto-resizing `<textarea>` with `appAutoFocus` replaces the rendered content; Save/Cancel buttons commit or discard changes (Escape also cancels)
 - Task content is stored as raw Markdown and rendered via `MarkdownPipe` (wraps `marked`) into `[innerHTML]`; Angular's built-in sanitiser handles XSS
 - `Task` interface exported from `components/task/task.ts`
 - `AutoFocusDirective` (`auto-focus.directive.ts`) focuses and selects a textarea on render, also triggers initial auto-resize

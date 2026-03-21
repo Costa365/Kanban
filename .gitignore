@@ -33,6 +33,7 @@ npm-debug.log
 yarn-error.log
 testem.log
 /typings
+docker-compose-prod.yml
 
 # System Files
 .DS_Store

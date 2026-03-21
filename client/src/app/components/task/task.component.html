@@ -1,10 +1,4 @@
-<form class="add-form" (submit)="addTask(title.value); title.value = ''; title.style.height = 'auto'; $event.preventDefault()">
-  <textarea class="add-input" placeholder="Add a new task… (Ctrl+Enter to submit)" autocomplete="off"
-            rows="1" #title
-            (keydown)="onAddKeydown($event, title)"
-            (input)="autoResize(title)"></textarea>
-  <button class="btn btn-primary" type="submit">Add task</button>
-</form>
+<button class="btn btn-primary add-task-btn" type="button" (click)="startAdd()">+ Add task</button>
 
 <div class="board" cdkDropListGroup>
 
@@ -16,14 +10,35 @@
     <div class="task-list" cdkDropList id="col_to_do"
          [cdkDropListData]="todoTasks"
          (cdkDropListDropped)="onDrop($event)">
+
+      <!-- New task inline form -->
+      <div class="task-card todo-card editing-card" *ngIf="addingNew">
+        <div class="edit-wrapper">
+          <textarea class="edit-input" appAutoFocus placeholder="Enter task..."
+                    [(ngModel)]="newTaskTitle"
+                    (keydown)="onAddKeydown($event)"
+                    #ei (input)="autoResize(ei)"></textarea>
+          <div class="edit-actions">
+            <button class="btn btn-small btn-primary" type="button" (click)="saveAdd()">Save</button>
+            <button class="btn btn-small btn-secondary" type="button" (click)="cancelAdd()">Cancel</button>
+          </div>
+        </div>
+      </div>
+
       <div *ngFor="let task of todoTasks" cdkDrag class="task-card todo-card"
+           [class.editing-card]="editingId === task._id"
            [cdkDragDisabled]="editingId === task._id">
         <ng-container *ngIf="editingId === task._id; else vTodo">
-          <textarea class="edit-input" appAutoFocus [value]="editingTitle" #ei
-                    (keydown)="onEditKeydown($event, task, ei)"
-                    (blur)="saveEdit(task, ei.value)"
-                    (input)="autoResize(ei)"></textarea>
-          <span class="edit-hint">Ctrl+Enter to save &middot; Esc to cancel</span>
+          <div class="edit-wrapper">
+            <textarea class="edit-input" appAutoFocus
+                      [(ngModel)]="editingTitle"
+                      (keydown)="onEditKeydown($event)"
+                      #ei (input)="autoResize(ei)"></textarea>
+            <div class="edit-actions">
+              <button class="btn btn-small btn-primary" type="button" (click)="saveEdit(task)">Save</button>
+              <button class="btn btn-small btn-secondary" type="button" (click)="cancelEdit()">Cancel</button>
+            </div>
+          </div>
         </ng-container>
         <ng-template #vTodo>
           <div class="markdown-body" [innerHTML]="task.title | markdown"></div>
@@ -50,13 +65,19 @@
          [cdkDropListData]="doingTasks"
          (cdkDropListDropped)="onDrop($event)">
       <div *ngFor="let task of doingTasks" cdkDrag class="task-card doing-card"
+           [class.editing-card]="editingId === task._id"
            [cdkDragDisabled]="editingId === task._id">
         <ng-container *ngIf="editingId === task._id; else vDoing">
-          <textarea class="edit-input" appAutoFocus [value]="editingTitle" #ei
-                    (keydown)="onEditKeydown($event, task, ei)"
-                    (blur)="saveEdit(task, ei.value)"
-                    (input)="autoResize(ei)"></textarea>
-          <span class="edit-hint">Ctrl+Enter to save &middot; Esc to cancel</span>
+          <div class="edit-wrapper">
+            <textarea class="edit-input" appAutoFocus
+                      [(ngModel)]="editingTitle"
+                      (keydown)="onEditKeydown($event)"
+                      #ei (input)="autoResize(ei)"></textarea>
+            <div class="edit-actions">
+              <button class="btn btn-small btn-primary" type="button" (click)="saveEdit(task)">Save</button>
+              <button class="btn btn-small btn-secondary" type="button" (click)="cancelEdit()">Cancel</button>
+            </div>
+          </div>
         </ng-container>
         <ng-template #vDoing>
           <div class="markdown-body" [innerHTML]="task.title | markdown"></div>
@@ -83,13 +104,19 @@
          [cdkDropListData]="doneTasks"
          (cdkDropListDropped)="onDrop($event)">
       <div *ngFor="let task of doneTasks" cdkDrag class="task-card done-card"
+           [class.editing-card]="editingId === task._id"
            [cdkDragDisabled]="editingId === task._id">
         <ng-container *ngIf="editingId === task._id; else vDone">
-          <textarea class="edit-input" appAutoFocus [value]="editingTitle" #ei
-                    (keydown)="onEditKeydown($event, task, ei)"
-                    (blur)="saveEdit(task, ei.value)"
-                    (input)="autoResize(ei)"></textarea>
-          <span class="edit-hint">Ctrl+Enter to save &middot; Esc to cancel</span>
+          <div class="edit-wrapper">
+            <textarea class="edit-input" appAutoFocus
+                      [(ngModel)]="editingTitle"
+                      (keydown)="onEditKeydown($event)"
+                      #ei (input)="autoResize(ei)"></textarea>
+            <div class="edit-actions">
+              <button class="btn btn-small btn-primary" type="button" (click)="saveEdit(task)">Save</button>
+              <button class="btn btn-small btn-secondary" type="button" (click)="cancelEdit()">Cancel</button>
+            </div>
+          </div>
         </ng-container>
         <ng-template #vDone>
           <div class="markdown-body" [innerHTML]="task.title | markdown"></div>

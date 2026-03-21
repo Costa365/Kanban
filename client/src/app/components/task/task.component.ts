@@ -16,6 +16,8 @@ export class TaskComponent implements OnInit {
   pendingDeleteId: string | null = null;
   editingId: string | null = null;
   editingTitle = '';
+  addingNew = false;
+  newTaskTitle = '';
 
   constructor(private dataService: DataService) {}
 
@@ -61,20 +63,32 @@ export class TaskComponent implements OnInit {
     this.persistColumnOrder(event.container.id, event.container.data);
   }
 
-  addTask(title: string): void {
-    if (!title.trim()) { return; }
-    const newTask: Task = { position: 1, title: title.trim(), state: 'To Do', _id: '' };
+  startAdd(): void {
+    this.addingNew = true;
+    this.newTaskTitle = '';
+  }
+
+  saveAdd(): void {
+    const trimmed = this.newTaskTitle.trim();
+    if (!trimmed) {
+      this.cancelAdd();
+      return;
+    }
+    this.addingNew = false;
+    const newTask: Task = { position: 1, title: trimmed, state: 'To Do', _id: '' };
     this.dataService.addTask(newTask).subscribe((created) => {
       this.todoTasks.push(created);
     });
   }
 
-  onAddKeydown(event: KeyboardEvent, el: HTMLTextAreaElement): void {
-    if (event.key === 'Enter' && (event.ctrlKey || event.metaKey)) {
-      event.preventDefault();
-      this.addTask(el.value);
-      el.value = '';
-      el.style.height = 'auto';
+  cancelAdd(): void {
+    this.addingNew = false;
+    this.newTaskTitle = '';
+  }
+
+  onAddKeydown(event: KeyboardEvent): void {
+    if (event.key === 'Escape') {
+      this.cancelAdd();
     }
   }
 
@@ -83,11 +97,7 @@ export class TaskComponent implements OnInit {
     this.editingTitle = task.title;
   }
 
-  onEditKeydown(event: KeyboardEvent, task: Task, el: HTMLTextAreaElement): void {
-    if (event.key === 'Enter' && (event.ctrlKey || event.metaKey)) {
-      event.preventDefault();
-      el.blur();
-    }
+  onEditKeydown(event: KeyboardEvent): void {
     if (event.key === 'Escape') {
       this.cancelEdit();
     }
@@ -98,10 +108,10 @@ export class TaskComponent implements OnInit {
     el.style.height = `${el.scrollHeight}px`;
   }
 
-  saveEdit(task: Task, newTitle: string): void {
+  saveEdit(task: Task): void {
     if (!this.editingId) { return; }
     this.editingId = null;
-    const trimmed = newTitle.trim();
+    const trimmed = this.editingTitle.trim();
     if (!trimmed || trimmed === task.title) { return; }
     const updated = { ...task, title: trimmed };
     const replace = (arr: Task[]) => arr.map((t) => t._id === task._id ? updated : t);
