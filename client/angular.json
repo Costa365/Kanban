@@ -20,6 +20,8 @@
             "tsConfig": "tsconfig.app.json",
             "assets": [
               "src/favicon.ico",
+              "src/favicon.svg",
+              "src/apple-touch-icon.png",
               {
                 "glob": "**/*",
                 "input": "src/assets",
@@ -81,6 +83,8 @@
             "tsConfig": "tsconfig.spec.json",
             "assets": [
               "src/favicon.ico",
+              "src/favicon.svg",
+              "src/apple-touch-icon.png",
               {
                 "glob": "**/*",
                 "input": "src/assets",
