@@ -8,7 +8,9 @@ export class AutoFocusDirective implements AfterViewInit {
     const el = this.el.nativeElement;
     el.focus();
     el.select();
-    el.style.height = 'auto';
-    el.style.height = `${el.scrollHeight}px`;
+    queueMicrotask(() => {
+      el.style.height = 'auto';
+      el.style.height = `${el.scrollHeight}px`;
+    });
   }
 }
