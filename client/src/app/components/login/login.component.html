@@ -6,9 +6,12 @@
     <div class="error" *ngIf="error">{{ error }}</div>
 
     <form (submit)="submit(); $event.preventDefault()">
-      <input class="input" type="email" placeholder="Email" [(ngModel)]="email" name="email" required autocomplete="email">
-      <input class="input" type="password" placeholder="Password" [(ngModel)]="password" name="password" required autocomplete="current-password">
-      <button class="btn btn-primary submit-btn" type="submit">{{ isRegister ? 'Create account' : 'Sign in' }}</button>
+      <input class="input" type="email" placeholder="Email" [(ngModel)]="email" name="email" required autocomplete="email" [disabled]="loading">
+      <input class="input" type="password" placeholder="Password" [(ngModel)]="password" name="password" required autocomplete="current-password" [disabled]="loading">
+      <button class="btn btn-primary submit-btn" type="submit" [disabled]="loading">
+        <span class="spinner" *ngIf="loading" aria-hidden="true"></span>
+        <span>{{ loading ? (isRegister ? 'Creating account…' : 'Signing in…') : (isRegister ? 'Create account' : 'Sign in') }}</span>
+      </button>
     </form>
 
     <p class="toggle-text">
