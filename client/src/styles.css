@@ -5,11 +5,11 @@
   --column-bg:   #e8edf2;
   --border:      #e2e8f0;
   --text:        #0f172a;
-  --text-muted:  #64748b;
+  --text-muted:  #475569;
   --accent:      #6366f1;
   --accent-h:    #4f46e5;
-  --header-bg:   #4338ca;
-  --header-bg-h: #3730a3;
+  --header-bg:   #3730a3;
+  --header-bg-h: #312e81;
   --todo:        #ef4444;
   --doing:       #f59e0b;
   --done:        #22c55e;
@@ -48,9 +48,9 @@
   --column-bg:   #e8edf2;
   --border:      #e2e8f0;
   --text:        #0f172a;
-  --text-muted:  #64748b;
-  --header-bg:   #4338ca;
-  --header-bg-h: #3730a3;
+  --text-muted:  #475569;
+  --header-bg:   #3730a3;
+  --header-bg-h: #312e81;
 }
 
 /* ── Reset ───────────────────────────────────────────── */
