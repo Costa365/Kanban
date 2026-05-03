@@ -25,7 +25,7 @@
         </div>
       </div>
 
-      <div *ngFor="let task of todoTasks" cdkDrag class="task-card todo-card"
+      <div *ngFor="let task of todoTasks; trackBy: trackById" cdkDrag class="task-card todo-card"
            [class.editing-card]="editingId === task._id"
            [cdkDragDisabled]="editingId === task._id">
         <ng-container *ngIf="editingId === task._id; else vTodo">
@@ -41,7 +41,7 @@
           </div>
         </ng-container>
         <ng-template #vTodo>
-          <div class="markdown-body" [innerHTML]="task.title | markdown"></div>
+          <div class="markdown-body" [innerHTML]="task.title | markdown" (click)="onCheckboxClick($event, task)"></div>
           <div class="card-actions">
             <button class="action-btn" type="button" (click)="startEdit(task)" title="Edit">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -64,7 +64,7 @@
     <div class="task-list" cdkDropList id="col_doing"
          [cdkDropListData]="doingTasks"
          (cdkDropListDropped)="onDrop($event)">
-      <div *ngFor="let task of doingTasks" cdkDrag class="task-card doing-card"
+      <div *ngFor="let task of doingTasks; trackBy: trackById" cdkDrag class="task-card doing-card"
            [class.editing-card]="editingId === task._id"
            [cdkDragDisabled]="editingId === task._id">
         <ng-container *ngIf="editingId === task._id; else vDoing">
@@ -80,7 +80,7 @@
           </div>
         </ng-container>
         <ng-template #vDoing>
-          <div class="markdown-body" [innerHTML]="task.title | markdown"></div>
+          <div class="markdown-body" [innerHTML]="task.title | markdown" (click)="onCheckboxClick($event, task)"></div>
           <div class="card-actions">
             <button class="action-btn" type="button" (click)="startEdit(task)" title="Edit">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -103,7 +103,7 @@
     <div class="task-list" cdkDropList id="col_done"
          [cdkDropListData]="doneTasks"
          (cdkDropListDropped)="onDrop($event)">
-      <div *ngFor="let task of doneTasks" cdkDrag class="task-card done-card"
+      <div *ngFor="let task of doneTasks; trackBy: trackById" cdkDrag class="task-card done-card"
            [class.editing-card]="editingId === task._id"
            [cdkDragDisabled]="editingId === task._id">
         <ng-container *ngIf="editingId === task._id; else vDone">
@@ -119,7 +119,7 @@
           </div>
         </ng-container>
         <ng-template #vDone>
-          <div class="markdown-body" [innerHTML]="task.title | markdown"></div>
+          <div class="markdown-body" [innerHTML]="task.title | markdown" (click)="onCheckboxClick($event, task)"></div>
           <div class="card-actions">
             <button class="action-btn" type="button" (click)="startEdit(task)" title="Edit">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">

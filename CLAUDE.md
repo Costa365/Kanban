@@ -42,14 +42,15 @@ The client's `proxy.conf.json` forwards `/api/*` to `localhost:3000` during `ng 
 - `AuthInterceptor` attaches `Authorization: Bearer <token>` to all non-auth API requests; auto-logouts on 401
 - `AuthGuard` (`canActivate`) redirects unauthenticated users to `/login`
 - `DataService` is the sole HTTP layer for tasks; uses `HttpClient` with relative URL `/api/`
-- `TaskComponent` holds three separate arrays (`todoTasks`, `doingTasks`, `doneTasks`); add/delete update local state directly (no re-fetch) using the server response
+- `TaskComponent` holds three separate arrays (`todoTasks`, `doingTasks`, `doneTasks`); add/delete update local state directly (no re-fetch) using the server response. All three `*ngFor` loops use `trackBy: trackById` so updates (e.g. checkbox toggles) patch the existing card DOM instead of remounting it
 - Drag-and-drop uses `@angular/cdk/drag-drop` (`cdkDropListGroup` on the board, `cdkDropList` per column); on drop, `persistColumnOrder()` PUTs every task in the affected column(s)
 - Adding tasks: clicking "+ Add task" creates an inline editable card at the top of To Do with Save/Cancel buttons; on Save the task is POSTed to the server
 - Inline editing: clicking the pencil icon on a card sets `editingId`; an auto-resizing `<textarea>` with `appAutoFocus` replaces the rendered content; Save/Cancel buttons commit or discard changes (Escape also cancels)
 - Task content is stored as raw Markdown and rendered via `MarkdownPipe` (wraps `marked`) into `[innerHTML]`; Angular's built-in sanitiser handles XSS
+- Sub-task checklists: GFM task list items (`- [ ] foo` / `- [x] foo`) are interactive. The pipe also normalises the empty form `- []` to `- [ ]` before parsing. Marked emits `<input type="checkbox">` which Angular's sanitiser strips, so the pipe rewrites each into `<span class="task-checkbox">` (with `task-checkbox-checked` when ticked); the styles live in global `styles.css` because component-scoped CSS doesn't apply to `[innerHTML]` content. Clicks on `.markdown-body` are handled by `onCheckboxClick`, which finds the clicked checkbox's index by position among siblings and calls `toggleCheckbox`, which flips the Nth `[ ]`/`[x]`/`[]` marker in the raw Markdown and PUTs the task
 - `Task` interface exported from `components/task/task.ts`
 - `AutoFocusDirective` (`auto-focus.directive.ts`) focuses and selects a textarea on render, also triggers initial auto-resize
-- `MarkdownPipe` (`markdown.pipe.ts`) wraps `marked` with `breaks: true, gfm: true`
+- `MarkdownPipe` (`markdown.pipe.ts`) wraps `marked` with `breaks: true, gfm: true`; also normalises `- []` → `- [ ]` and rewrites task-list `<input>` to `<span class="task-checkbox">`
 - Light/dark mode: `AppComponent` reads `localStorage` and `prefers-color-scheme`, sets `data-theme` on `<html>`; all colours are CSS custom properties on `:root`
 - Responsive header: on mobile (<=600px) nav links, email, and sign-out collapse into a hamburger menu dropdown; `menuOpen` state on `AppComponent` toggles the menu; a backdrop overlay closes it on outside tap
 

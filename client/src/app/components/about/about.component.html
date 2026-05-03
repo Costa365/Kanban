@@ -1,17 +1,47 @@
 <div class="about">
   <h1>About</h1>
-  <p>A Kanban board for managing tasks across three stages: <strong>To Do</strong>, <strong>In Progress</strong>, and <strong>Done</strong>.</p>
+  <p>A Kanban board for managing tasks across three stages: <strong>To Do</strong>, <strong>In Progress</strong>, and <strong>Done</strong>. Each user has their own private board.</p>
 
-  <h2>Features</h2>
+  <h2>Getting started</h2>
+  <ol>
+    <li>Register an account or sign in from the login page.</li>
+    <li>Click <em>+ Add task</em> to create your first card.</li>
+    <li>Drag cards between columns as work progresses.</li>
+  </ol>
+
+  <h2>Working with tasks</h2>
   <ul>
-    <li><strong>User accounts</strong> - register and sign in with email and password; each user has their own private board</li>
-    <li><strong>Add tasks</strong> - click <em>+ Add task</em> to create a new card in To Do, then type and hit Save</li>
-    <li><strong>Edit tasks</strong> - click the pencil icon on a card to edit inline, then Save or Cancel</li>
-    <li><strong>Markdown support</strong> - task content is rendered as Markdown; use bold, lists, code, headings, and more</li>
-    <li><strong>Multi-line tasks</strong> - both the add field and the edit field expand as you type</li>
-    <li><strong>Drag and drop</strong> - drag cards between columns to move them between stages, or reorder within a column</li>
-    <li><strong>Delete tasks</strong> - hover a card and click &#x2715;, then confirm in the dialog</li>
-    <li><strong>Light and dark mode</strong> - toggle in the header, preference is saved across sessions</li>
+    <li><strong>Add</strong> - click <em>+ Add task</em>, type a title, hit <em>Save</em>. The new card appears at the top of <em>To Do</em>.</li>
+    <li><strong>Edit</strong> - click the pencil icon on a card to edit inline; hit <em>Save</em> to commit, or <em>Cancel</em> / <kbd>Esc</kbd> to discard.</li>
+    <li><strong>Delete</strong> - hover a card, click <em>&#x2715;</em>, then confirm in the dialog.</li>
+    <li><strong>Move</strong> - drag a card to another column, or reorder it within the same column.</li>
+    <li><strong>Multi-line input</strong> - the add and edit fields auto-expand as you type.</li>
+  </ul>
+
+  <h2>Formatting with Markdown</h2>
+  <p>Card content is rendered as <a href="https://github.github.com/gfm/" target="_blank">GitHub-flavored Markdown</a>.</p>
+  <ul>
+    <li><strong>Headings</strong> - <code># Heading</code>, <code>## Subheading</code></li>
+    <li><strong>Bold / italic</strong> - <code>**bold**</code>, <code>*italic*</code></li>
+    <li><strong>Lists</strong> - <code>- item</code> or <code>1. item</code></li>
+    <li><strong>Code</strong> - <code>`inline`</code> or fenced <code>```block```</code></li>
+    <li><strong>Links</strong> - <code>[label](https://example.com)</code></li>
+    <li><strong>Quotes &amp; rules</strong> - <code>&gt; quote</code>, <code>---</code></li>
+  </ul>
+
+  <h2>Sub-task checklists</h2>
+  <p>Use square brackets at the start of a list item to add a checkable sub-task. Click the checkbox on the rendered card to toggle it without entering edit mode.</p>
+  <ul>
+    <li><code>- [] item</code> or <code>- [ ] item</code> - unchecked</li>
+    <li><code>- [x] item</code> - checked</li>
+  </ul>
+
+  <h2>Other features</h2>
+  <ul>
+    <li><strong>Light and dark mode</strong> - toggle from the header; preference is saved across sessions.</li>
+    <li><strong>Mobile layout</strong> - on small screens, the navigation, email, and sign-out collapse into a hamburger menu.</li>
+    <li><strong>Sign out</strong> - from the header (or the hamburger menu on mobile).</li>
+    <li><strong>Per-user data</strong> - each account sees only its own tasks.</li>
   </ul>
 
   <h2>Stack</h2>

@@ -150,4 +150,38 @@ export class TaskComponent implements OnInit {
   cancelDelete(): void {
     this.pendingDeleteId = null;
   }
+
+  trackById(_index: number, task: Task): string {
+    return task._id;
+  }
+
+  onCheckboxClick(event: MouseEvent, task: Task): void {
+    const target = event.target as HTMLElement;
+    if (!target.classList?.contains('task-checkbox')) { return; }
+    event.preventDefault();
+    event.stopPropagation();
+    const container = event.currentTarget as HTMLElement;
+    const all = container.querySelectorAll('.task-checkbox');
+    const idx = Array.prototype.indexOf.call(all, target);
+    if (idx < 0) { return; }
+    this.toggleCheckbox(task, idx);
+  }
+
+  private toggleCheckbox(task: Task, index: number): void {
+    let n = -1;
+    const re = /^(\s*(?:[-*+]|\d+\.)\s+)\[([ xX]?)\]/gm;
+    const newTitle = task.title.replace(re, (match, prefix: string, mark: string) => {
+      n++;
+      if (n !== index) { return match; }
+      const checked = mark === 'x' || mark === 'X';
+      return `${prefix}[${checked ? ' ' : 'x'}]`;
+    });
+    if (newTitle === task.title) { return; }
+    const updated = { ...task, title: newTitle };
+    const replace = (arr: Task[]) => arr.map((t) => t._id === task._id ? updated : t);
+    this.todoTasks = replace(this.todoTasks);
+    this.doingTasks = replace(this.doingTasks);
+    this.doneTasks = replace(this.doneTasks);
+    this.dataService.updateTask(updated).subscribe();
+  }
 }

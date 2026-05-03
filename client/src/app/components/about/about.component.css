@@ -28,20 +28,53 @@
   font-weight: 500;
 }
 
-.about ul {
+.about ul, .about ol {
   list-style: none;
   display: flex;
   flex-direction: column;
   gap: 6px;
+  counter-reset: about-step;
 }
 
-.about ul li { color: var(--text-muted); }
+.about ul li, .about ol li { color: var(--text-muted); }
 
 .about ul li::before {
   content: '•';
   margin-right: 8px;
   color: var(--border);
 }
+
+.about ol li {
+  counter-increment: about-step;
+}
+
+.about ol li::before {
+  content: counter(about-step) '.';
+  margin-right: 8px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.about code {
+  background: color-mix(in srgb, var(--text) 8%, transparent);
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 0.88em;
+  color: var(--text);
+}
+
+.about kbd {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-family: inherit;
+  font-size: 0.85em;
+  color: var(--text);
+}
+
 
 .about a {
   color: var(--accent);
