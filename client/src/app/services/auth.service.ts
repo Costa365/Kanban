@@ -8,6 +8,8 @@ interface AuthResponse {
   email: string;
 }
 
+export interface AccountMessage { message: string; }
+
 @Injectable({
   providedIn: 'root',
 })
@@ -20,10 +22,34 @@ export class AuthService {
     this.email = localStorage.getItem('auth_email');
   }
 
-  register(email: string, password: string): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>('/api/auth/register', { email, password }).pipe(
+  register(email: string, password: string): Observable<AccountMessage> {
+    return this.http.post<AccountMessage>('/api/auth/register', { email, password });
+  }
+
+  resendVerification(email: string): Observable<AccountMessage> {
+    return this.http.post<AccountMessage>('/api/auth/resend-verification', { email });
+  }
+
+  verifyEmail(token: string): Observable<AccountMessage> {
+    return this.http.post<AccountMessage>('/api/auth/verify-email', { token });
+  }
+
+  forgotPassword(email: string): Observable<AccountMessage> {
+    return this.http.post<AccountMessage>('/api/auth/forgot-password', { email });
+  }
+
+  resetPassword(token: string, password: string): Observable<AccountMessage> {
+    return this.http.post<AccountMessage>('/api/auth/reset-password', { token, password });
+  }
+
+  changePassword(currentPassword: string, newPassword: string): Observable<AuthResponse & AccountMessage> {
+    return this.http.post<AuthResponse & AccountMessage>('/api/auth/change-password', { currentPassword, newPassword }).pipe(
       tap((res) => this.setSession(res)),
     );
+  }
+
+  closeAccount(password: string, confirmation: string): Observable<AccountMessage> {
+    return this.http.delete<AccountMessage>('/api/auth/account', { body: { password, confirmation } });
   }
 
   login(email: string, password: string): Observable<AuthResponse> {
@@ -51,11 +77,15 @@ export class AuthService {
     return this.email;
   }
 
-  logout(): void {
+  clearSession(): void {
     this.token = null;
     this.email = null;
     localStorage.removeItem('auth_token');
     localStorage.removeItem('auth_email');
-    this.router.navigate(['/login']);
+  }
+
+  logout(notice?: 'account-closed'): void {
+    this.clearSession();
+    this.router.navigate(['/login'], { queryParams: notice ? { notice } : {} });
   }
 }

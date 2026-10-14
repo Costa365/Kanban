@@ -1,0 +1,3 @@
+.account-card { max-width: 520px; }
+.acknowledgement { display: flex; align-items: flex-start; gap: 10px; line-height: 1.5; font-size: 13px; margin: 6px 0; }
+.acknowledgement input { margin-top: 3px; flex-shrink: 0; }

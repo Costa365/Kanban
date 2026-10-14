@@ -1,25 +1,19 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { TestBed } from '@angular/core/testing';
+import { of } from 'rxjs';
+import { AppModule } from '../../app.module';
+import { DataService } from '../../services/data.service';
 import { TaskComponent } from './task.component';
 
 describe('TaskComponent', () => {
-  let component: TaskComponent;
-  let fixture: ComponentFixture<TaskComponent>;
-
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ TaskComponent ]
-    })
-    .compileComponents();
-  }));
-
-  beforeEach(() => {
-    fixture = TestBed.createComponent(TaskComponent);
-    component = fixture.componentInstance;
+  it('shows a board with no tasks', async () => {
+    await TestBed.configureTestingModule({
+      imports: [AppModule],
+      providers: [{ provide: DataService, useValue: { getTasks: () => of([]) } }],
+    }).compileComponents();
+    const fixture = TestBed.createComponent(TaskComponent);
     fixture.detectChanges();
-  });
-
-  it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(fixture.componentInstance.todoTasks).toEqual([]);
+    expect(fixture.componentInstance.doingTasks).toEqual([]);
+    expect(fixture.componentInstance.doneTasks).toEqual([]);
   });
 });

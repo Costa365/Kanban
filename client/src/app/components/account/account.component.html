@@ -1,0 +1,45 @@
+<div class="account-shell">
+  <div class="account-card">
+    <h1>Account</h1>
+    <p>Signed in as {{ auth.getEmail() }}</p>
+    <h2>Change password</h2>
+    <p>Changing your password signs out your other sessions.</p>
+    <div class="error" role="alert" *ngIf="passwordError">{{ passwordError }}</div>
+    <div class="message" role="status" *ngIf="passwordMessage">{{ passwordMessage }}</div>
+    <form (ngSubmit)="changePassword()">
+      <label for="current-password">Current password</label>
+      <app-password-input inputId="current-password" name="currentPassword"
+        [(ngModel)]="currentPassword" [disabled]="!!busy"></app-password-input>
+      <label for="new-password">New password</label>
+      <app-password-input inputId="new-password" name="newPassword" autocomplete="new-password"
+        [minlength]="8" [(ngModel)]="newPassword" [disabled]="!!busy"></app-password-input>
+      <p class="help">Use at least 8 characters. Maximum 72 UTF-8 bytes (usually 72 characters).</p>
+      <label for="confirm-new-password">Confirm new password</label>
+      <app-password-input inputId="confirm-new-password" name="confirmPassword" autocomplete="new-password"
+        [minlength]="8" [(ngModel)]="confirmPassword" [disabled]="!!busy"></app-password-input>
+      <button class="action" type="submit" [disabled]="!!busy">{{ busy === 'password' ? 'Saving…' : 'Change password' }}</button>
+    </form>
+
+    <section class="section" aria-labelledby="close-account-title">
+      <h2 id="close-account-title">Close account</h2>
+      <p>This permanently deletes your account and all tasks on your board. This cannot be undone.</p>
+      <div class="error" role="alert" *ngIf="closureError">{{ closureError }}</div>
+      <form (ngSubmit)="closeAccount()">
+        <label for="closure-password">Current password</label>
+        <app-password-input inputId="closure-password" name="closurePassword"
+          [(ngModel)]="closurePassword" [disabled]="!!busy"></app-password-input>
+        <label for="closure-confirmation">Type DELETE to confirm</label>
+        <input class="input" id="closure-confirmation" name="confirmation" [(ngModel)]="confirmation"
+          required pattern="DELETE" autocomplete="off" [disabled]="!!busy">
+        <label class="acknowledgement">
+          <input type="checkbox" name="acknowledged" [(ngModel)]="acknowledged" required [disabled]="!!busy">
+          <span>I understand my account and tasks will be permanently deleted.</span>
+        </label>
+        <button class="action danger-action" type="submit" [disabled]="!!busy || !acknowledged || confirmation !== 'DELETE'">
+          {{ busy === 'closure' ? 'Closing account…' : 'Permanently close account' }}
+        </button>
+      </form>
+    </section>
+    <div class="links"><a routerLink="/">Back to board</a></div>
+  </div>
+</div>

@@ -55,6 +55,12 @@ router.post('/task', async (req, res) => {
     }
     task.date = new Date();
     const result = await col().insertOne(task);
+    // A request authenticated just before closure must not leave a new orphan.
+    const owner = await db.collection('users').findOne({ _id: new ObjectId(userId), accountClosing: { $ne: true } });
+    if (!owner) {
+      await col().deleteOne({ _id: result.insertedId });
+      return res.status(401).json({ error: 'Account is closed' });
+    }
     res.json({ ...task, _id: result.insertedId });
   } catch (err) {
     res.status(500).json({ error: err.message });

@@ -14,8 +14,9 @@ export class AuthInterceptor implements HttpInterceptor {
   constructor(private authService: AuthService) {}
 
   intercept(req: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    // Don't attach token to auth endpoints
-    if (req.url.includes('/api/auth/')) {
+    const isApi = req.url.startsWith('/api/');
+    const protectedAccount = req.url === '/api/auth/change-password' || req.url === '/api/auth/account';
+    if (!isApi || (req.url.startsWith('/api/auth/') && !protectedAccount)) {
       return next.handle(req);
     }
 
@@ -29,7 +30,7 @@ export class AuthInterceptor implements HttpInterceptor {
     return next.handle(req).pipe(
       tap({
         error: (err: HttpErrorResponse) => {
-          if (err.status === 401) {
+          if (err.status === 401 && token) {
             this.authService.logout();
           }
         },

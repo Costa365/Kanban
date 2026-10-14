@@ -12,6 +12,7 @@
   <nav *ngIf="authService.isLoggedIn()">
     <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Board</a>
     <a routerLink="/about" routerLinkActive="active">About</a>
+    <a routerLink="/account" routerLinkActive="active">Account</a>
   </nav>
   <div class="spacer" *ngIf="!authService.isLoggedIn()"></div>
   <div class="header-right">
@@ -57,6 +58,7 @@
 <div class="mobile-menu" *ngIf="menuOpen && authService.isLoggedIn()">
   <a routerLink="/" (click)="closeMenu()">Board</a>
   <a routerLink="/about" (click)="closeMenu()">About</a>
+  <a routerLink="/account" (click)="closeMenu()">Account</a>
   <span class="mobile-menu-email">{{ authService.getEmail() }}</span>
   <button class="mobile-menu-signout" type="button" (click)="logout()">Sign out</button>
 </div>
