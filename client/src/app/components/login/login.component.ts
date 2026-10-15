@@ -107,7 +107,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.subscriptions.add(action.pipe(finalize(() => (this.loading = false))).subscribe({
       next: (response) => {
         if (this.mode === 'login') {
-          this.router.navigate(['/']);
+          this.router.navigate(['/board']);
           return;
         }
         if ('message' in response) this.message = response.message;

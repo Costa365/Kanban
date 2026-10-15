@@ -190,3 +190,18 @@ main { padding: 24px; }
 
 nav a, .mobile-menu a, .mobile-menu-signout { display: flex; align-items: center; gap: 8px; }
 .icon { width: 17px; height: 17px; flex-shrink: 0; }
+
+.brand-link { display: inline-flex; align-items: center; gap: 16px; flex-shrink: 0; }
+.header-signin, .header-signup { font-size: 13px; font-weight: 600; color: #fff; padding: 7px 10px; border-radius: 7px; }
+.header-signup { background: rgba(255, 255, 255, .18); border: 1px solid rgba(255, 255, 255, .25); }
+.header-signin:hover, .header-signup:hover { background: rgba(255, 255, 255, .25); }
+.brand-link:focus-visible, .header-signin:focus-visible, .header-signup:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+@media (max-width: 600px) {
+  .brand-link { gap: 12px; }
+  .header-right { gap: 6px; }
+  .header-signin, .header-signup { padding: 7px; font-size: 12px; white-space: nowrap; }
+}
+@media (max-width: 380px) {
+  .brand { font-size: 18px; margin-right: 0; }
+  .brand-link .logo { width: 24px; }
+}

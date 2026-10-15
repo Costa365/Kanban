@@ -7,7 +7,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 
 import { AppComponent } from './app.component';
 import { TaskComponent } from './components/task/task.component';
-import { AboutComponent } from './components/about/about.component';
+import { HomeComponent } from './components/home/home.component';
 import { LoginComponent } from './components/login/login.component';
 import { AccountComponent } from './components/account/account.component';
 import { PasswordInputComponent } from './components/password-input/password-input.component';
@@ -15,6 +15,7 @@ import { AutoFocusDirective } from './auto-focus.directive';
 import { MarkdownPipe } from './markdown.pipe';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { AuthGuard } from './guards/auth.guard';
+import { homeGuard } from './guards/home.guard';
 
 const appRoutes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -24,15 +25,16 @@ const appRoutes: Routes = [
   { path: 'verify-email', component: LoginComponent, data: { mode: 'verify' } },
   { path: 'reset-password', component: LoginComponent, data: { mode: 'reset' } },
   { path: 'account', component: AccountComponent, canActivate: [AuthGuard] },
-  { path: '', component: TaskComponent, canActivate: [AuthGuard] },
-  { path: 'about', component: AboutComponent, canActivate: [AuthGuard] },
+  { path: '', component: HomeComponent, pathMatch: 'full', canActivate: [homeGuard] },
+  { path: 'board', component: TaskComponent, canActivate: [AuthGuard] },
+  { path: 'about', redirectTo: '', pathMatch: 'full' },
 ];
 
 @NgModule({
   declarations: [
     AppComponent,
     TaskComponent,
-    AboutComponent,
+    HomeComponent,
     LoginComponent,
     AccountComponent,
     PasswordInputComponent,

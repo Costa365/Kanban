@@ -46,6 +46,15 @@ describe('LoginComponent account flows', () => {
     expect(router.navigate).not.toHaveBeenCalled();
   });
 
+  it('opens the private board after successful sign-in', async () => {
+    const fixture = await setup('login');
+    auth.login.and.returnValue(of({ token: 'session-token', email: 'person@example.test' }));
+    fixture.componentInstance.email = 'person@example.test';
+    fixture.componentInstance.password = 'chosen password';
+    fixture.componentInstance.submit();
+    expect(router.navigate).toHaveBeenCalledWith(['/board']);
+  });
+
   it('prevents submission when confirmation differs or the UTF-8 password exceeds bcrypt limit', async () => {
     const fixture = await setup('signup');
     const component = fixture.componentInstance;

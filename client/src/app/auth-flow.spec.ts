@@ -19,6 +19,40 @@ describe('Account routes with real templates', () => {
   });
   afterEach(() => { http.verify(); TestBed.inject(AuthService).clearSession(); });
 
+  it('shows the public homepage without requiring a session or loading private tasks', async () => {
+    const harness = await RouterTestingHarness.create('/');
+    expect(TestBed.inject(Location).path()).toBe('');
+    expect(harness.routeNativeElement?.textContent).toContain('Your work, in clear view.');
+    expect(harness.routeNativeElement?.querySelector('img[src="assets/board-preview.png"]')).toBeTruthy();
+    expect(harness.routeNativeElement?.querySelector('a[href="/signup"]')).toBeTruthy();
+    http.expectNone('/api/tasks');
+  });
+
+  it('still requires sign-in to open the private board', async () => {
+    const harness = await RouterTestingHarness.create('/board');
+    expect(TestBed.inject(Location).path()).toBe('/login');
+    expect(harness.routeNativeElement?.textContent).toContain('Sign in to Kanban');
+    http.expectNone('/api/tasks');
+  });
+
+  it('opens the board when a signed-in user visits the homepage', async () => {
+    TestBed.inject(AuthService).login('person@example.test', 'chosen password').subscribe();
+    http.expectOne('/api/auth/login').flush({ token: 'session-token', email: 'person@example.test' });
+    const harness = await RouterTestingHarness.create('/');
+    http.expectOne('/api/tasks').flush([]);
+    harness.detectChanges();
+    expect(TestBed.inject(Location).path()).toBe('/board');
+    expect(harness.routeNativeElement?.querySelector('.board')).toBeTruthy();
+    expect(harness.routeNativeElement?.querySelector('.board-preview')).toBeNull();
+  });
+
+  it('redirects old About links to the public homepage', async () => {
+    const harness = await RouterTestingHarness.create('/about');
+    expect(TestBed.inject(Location).path()).toBe('');
+    expect(harness.routeNativeElement?.textContent).toContain('Your work, in clear view.');
+    http.expectNone('/api/tasks');
+  });
+
   it('loads a verification email fragment, removes it from the URL, and confirms using the real form', async () => {
     const token = 'a'.repeat(64);
     const harness = await RouterTestingHarness.create('/verify-email#token=' + token);

@@ -15,8 +15,12 @@ describe('AppComponent', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelector('nav a[href="/account"]')).toBeTruthy();
+    expect(fixture.nativeElement.querySelector('nav a[href="/board"]')).toBeTruthy();
+    expect(fixture.nativeElement.querySelector('a[href="/about"]')).toBeNull();
     fixture.componentInstance.toggleMenu();
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelector('.mobile-menu a[href="/account"]')).toBeTruthy();
+    expect(fixture.nativeElement.querySelector('.mobile-menu a[href="/board"]')).toBeTruthy();
+    expect(fixture.nativeElement.querySelector('a[href="/about"]')).toBeNull();
   });
 });

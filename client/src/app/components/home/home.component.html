@@ -1,14 +1,30 @@
-<div class="about">
-  <header class="about-hero">
+<div class="home landing">
+  <header class="home-hero">
     <div class="hero-copy">
       <span class="eyebrow">A little less chaos. A little more done.</span>
       <h1>Your work, in clear view.</h1>
       <p>A private Kanban board to capture ideas, focus on what matters, and see your progress at a glance.</p>
     </div>
+      <div class="hero-actions">
+        <a class="landing-button primary" routerLink="/signup">Create your board<svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/ui.svg#arrow"/></svg></a>
+        <a class="landing-button secondary" routerLink="/login">Sign in</a>
+      </div>
     <div class="workflow" aria-label="Task stages">
       <span class="stage todo">To Do</span><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/ui.svg#arrow"/></svg><span class="stage doing">In Progress</span><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/ui.svg#arrow"/></svg><span class="stage done">Done</span>
     </div>
   </header>
+
+    <figure class="board-preview">
+      <div class="preview-heading"><span class="preview-label"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/ui.svg#board"/></svg>A place for everything on your list</span><span class="preview-badge">The board in action</span></div>
+      <img src="assets/board-preview.png" width="1565" height="924" fetchpriority="high"
+        alt="Kanban board in dark mode with To Do, In Progress, and Done columns, showing household tasks, Markdown lists, and interactive checklists.">
+      <figcaption>Big plans or everyday errands. See what’s next, what’s moving, and what’s already done.</figcaption>
+    </figure>
+    <section class="landing-highlights" aria-label="What you can do with Kanban">
+      <div><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/ui.svg#move"/></svg><h2>Keep work moving</h2><p>Drag, drop, and prioritize. A simple flow from a fresh idea to a finished task.</p></div>
+      <div><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/ui.svg#checklist"/></svg><h2>Go beyond a title</h2><p>Add notes, links, Markdown, and checklists. Keep the details right where you need them.</p></div>
+      <div><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/ui.svg#shield"/></svg><h2>Make space for your work</h2><p>Your account has its own private board, with a light or dark theme to suit your day.</p></div>
+    </section>
 
   <section class="panel getting-started" aria-labelledby="start-title">
     <div class="section-heading"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/ui.svg#board"/></svg><div><h2 id="start-title">Up and running in three steps</h2><p>From your first idea to your first finished task.</p></div></div>
@@ -18,31 +34,6 @@
       <li><span class="step-number">03</span><div><h3>Keep things moving</h3><p>Drag cards between columns as work progresses, or reorder them within a column to set priorities.</p></div></li>
     </ol>
   </section>
-
-  <div class="guide-grid">
-    <section class="panel" aria-labelledby="tasks-title">
-      <div class="section-heading"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/ui.svg#edit"/></svg><div><h2 id="tasks-title">Working with tasks</h2><p>Small actions that keep your board in shape.</p></div></div>
-      <ul class="feature-list">
-        <li><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/ui.svg#plus"/></svg><div><h3>Add a little detail</h3><p>Task fields expand as you type, with room for multiple lines and notes.</p></div></li>
-        <li><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/ui.svg#edit"/></svg><div><h3>Edit in place</h3><p>Use the pencil on a card, then <strong>Save</strong>. Choose <strong>Cancel</strong> or press <kbd>Esc</kbd> to discard changes.</p></div></li>
-        <li><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/ui.svg#move"/></svg><div><h3>Move at your pace</h3><p>Drag to change a task’s stage or its position in a column.</p></div></li>
-        <li><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/ui.svg#trash"/></svg><div><h3>Clear what you no longer need</h3><p>Use the trash icon on a card, then confirm to delete it.</p></div></li>
-      </ul>
-    </section>
-
-    <section class="panel" aria-labelledby="markdown-title">
-      <div class="section-heading"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/ui.svg#code"/></svg><div><h2 id="markdown-title">Make your cards readable</h2><p>Format task content with <a href="https://github.github.com/gfm/" target="_blank" rel="noopener noreferrer">GitHub-flavored Markdown</a>.</p></div></div>
-      <dl class="markdown-examples">
-        <div><dt>Headings</dt><dd><code># Heading</code></dd></div>
-        <div><dt>Emphasis</dt><dd><code>**bold**</code> <code>*italic*</code></dd></div>
-        <div><dt>Lists</dt><dd><code>- item</code> <code>1. item</code></dd></div>
-        <div><dt>Code</dt><dd><code>`inline`</code> <code>```block```</code></dd></div>
-        <div><dt>Links</dt><dd><code>[label](https://example.com)</code></dd></div>
-        <div><dt>Quotes &amp; rules</dt><dd><code>&gt; quote</code> <code>---</code></dd></div>
-      </dl>
-      <div class="checklist-tip"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/ui.svg#checklist"/></svg><div><h3>Break it into smaller steps</h3><p>Add <code>- [ ] item</code> (or <code>- [] item</code>) for a sub-task, and <code>- [x] item</code> for a completed one. Click a checkbox right on the card to toggle it.</p></div></div>
-    </section>
-  </div>
 
   <section class="panel" aria-labelledby="features-title">
     <div class="section-heading"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/ui.svg#shield"/></svg><div><h2 id="features-title">Built around your day</h2><p>A few useful things to know.</p></div></div>
@@ -65,4 +56,9 @@
       <li><a href="https://marked.js.org/" target="_blank" rel="noopener noreferrer"><span class="stack-mark"><svg aria-hidden="true" focusable="false"><use href="assets/icons/stack.svg#marked"/></svg></span><span><h3>marked</h3><span class="stack-description">Markdown parsing</span></span><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/ui.svg#arrow"/></svg></a></li>
     </ul>
   </section>
+    <section class="landing-cta" aria-labelledby="cta-title">
+      <div><span class="eyebrow">A clearer day starts here</span><h2 id="cta-title">Give your next task a place to land.</h2><p>Set up your board and take it one card at a time.</p></div>
+      <a class="landing-button primary" routerLink="/signup">Get started<svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/ui.svg#arrow"/></svg></a>
+    </section>
+    <footer class="landing-footer"><span>Kanban · A little less chaos. A little more done.</span><a routerLink="/login">Already have an account? Sign in</a></footer>
 </div>
