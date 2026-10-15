@@ -10,9 +10,9 @@
   </svg>
   <span class="brand">Kanban</span>
   <nav *ngIf="authService.isLoggedIn()">
-    <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Board</a>
-    <a routerLink="/about" routerLinkActive="active">About</a>
-    <a routerLink="/account" routerLinkActive="active">Account</a>
+    <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/ui.svg#board"/></svg>Board</a>
+    <a routerLink="/account" routerLinkActive="active"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/ui.svg#user"/></svg>Account</a>
+    <a routerLink="/about" routerLinkActive="active"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/ui.svg#info"/></svg>About</a>
   </nav>
   <div class="spacer" *ngIf="!authService.isLoggedIn()"></div>
   <div class="header-right">
@@ -56,11 +56,11 @@
 <!-- Mobile menu dropdown -->
 <div class="menu-backdrop" *ngIf="menuOpen" (click)="closeMenu()"></div>
 <div class="mobile-menu" *ngIf="menuOpen && authService.isLoggedIn()">
-  <a routerLink="/" (click)="closeMenu()">Board</a>
-  <a routerLink="/about" (click)="closeMenu()">About</a>
-  <a routerLink="/account" (click)="closeMenu()">Account</a>
+  <a routerLink="/" (click)="closeMenu()"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/ui.svg#board"/></svg>Board</a>
+  <a routerLink="/account" (click)="closeMenu()"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/ui.svg#user"/></svg>Account</a>
+  <a routerLink="/about" (click)="closeMenu()"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/ui.svg#info"/></svg>About</a>
   <span class="mobile-menu-email">{{ authService.getEmail() }}</span>
-  <button class="mobile-menu-signout" type="button" (click)="logout()">Sign out</button>
+  <button class="mobile-menu-signout" type="button" (click)="logout()"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/ui.svg#logout"/></svg>Sign out</button>
 </div>
 
 <main>
