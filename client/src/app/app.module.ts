@@ -6,6 +6,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 
 import { AppComponent } from './app.component';
+import { MarkdownHelpComponent } from './components/markdown-help/markdown-help.component';
 import { TaskComponent } from './components/task/task.component';
 import { HomeComponent } from './components/home/home.component';
 import { LoginComponent } from './components/login/login.component';
@@ -34,6 +35,7 @@ const appRoutes: Routes = [
   declarations: [
     AppComponent,
     TaskComponent,
+    MarkdownHelpComponent,
     HomeComponent,
     LoginComponent,
     AccountComponent,

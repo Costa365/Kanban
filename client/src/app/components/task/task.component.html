@@ -21,6 +21,7 @@
           <div class="edit-actions">
             <button class="btn btn-small btn-primary" type="button" (click)="saveAdd()">Save</button>
             <button class="btn btn-small btn-secondary" type="button" (click)="cancelAdd()">Cancel</button>
+            <app-markdown-help referenceId="new-task-markdown-help"></app-markdown-help>
           </div>
         </div>
       </div>
@@ -37,6 +38,7 @@
             <div class="edit-actions">
               <button class="btn btn-small btn-primary" type="button" (click)="saveEdit(task)">Save</button>
               <button class="btn btn-small btn-secondary" type="button" (click)="cancelEdit()">Cancel</button>
+              <app-markdown-help [referenceId]="'task-markdown-help-' + task._id"></app-markdown-help>
             </div>
           </div>
         </ng-container>
@@ -76,6 +78,7 @@
             <div class="edit-actions">
               <button class="btn btn-small btn-primary" type="button" (click)="saveEdit(task)">Save</button>
               <button class="btn btn-small btn-secondary" type="button" (click)="cancelEdit()">Cancel</button>
+              <app-markdown-help [referenceId]="'task-markdown-help-' + task._id"></app-markdown-help>
             </div>
           </div>
         </ng-container>
@@ -115,6 +118,7 @@
             <div class="edit-actions">
               <button class="btn btn-small btn-primary" type="button" (click)="saveEdit(task)">Save</button>
               <button class="btn btn-small btn-secondary" type="button" (click)="cancelEdit()">Cancel</button>
+              <app-markdown-help [referenceId]="'task-markdown-help-' + task._id"></app-markdown-help>
             </div>
           </div>
         </ng-container>

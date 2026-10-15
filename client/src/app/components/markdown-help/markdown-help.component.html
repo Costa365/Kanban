@@ -1,0 +1,22 @@
+<button class="help-toggle" type="button" (click)="expanded = !expanded"
+        [attr.aria-expanded]="expanded" [attr.aria-controls]="referenceId">
+  <svg width="15" height="15" aria-hidden="true" focusable="false"><use href="assets/icons/ui.svg#code"/></svg>
+  Markdown help
+  <svg class="chevron" [class.expanded]="expanded" width="12" height="12" viewBox="0 0 24 24"
+       fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg>
+</button>
+<section class="markdown-reference" [id]="referenceId" [hidden]="!expanded" aria-label="Markdown reference">
+  <p class="intro">Write the syntax on the left to get the result on the right.</p>
+  <div class="column-labels" aria-hidden="true"><span>You type</span><span>You get</span></div>
+  <dl>
+    @for (example of examples; track example.label) {
+      <div class="example">
+        <dt>{{ example.label }}</dt>
+        <dd><pre class="syntax"><code>{{ example.syntax }}</code></pre><div class="markdown-body preview"
+          [class.link-example]="example.label === 'Link'" [class.heading-example]="example.label === 'Heading'"
+          [innerHTML]="example.preview"></div></dd>
+      </div>
+    }
+  </dl>
+  <p class="tip">You can also use <code>##</code> for a smaller heading, <code>---</code> for a divider, or <code>- []</code> for an unchecked sub-task. Checklists can be ticked directly on a saved card.</p>
+</section>

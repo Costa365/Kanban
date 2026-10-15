@@ -167,10 +167,13 @@
 
 .edit-wrapper {
   width: 100%;
+  min-width: 0;
 }
 
 .edit-actions {
   display: flex;
+  flex-wrap: wrap;
+  align-items: center;
   gap: 6px;
   margin-top: 8px;
 }
