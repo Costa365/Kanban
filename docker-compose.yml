@@ -19,6 +19,10 @@ services:
       - EMAIL_FROM_NAME=${EMAIL_FROM_NAME:-Kanban}
       - APP_URL=${APP_URL:-http://localhost}
       - TRUST_PROXY_HOPS=${TRUST_PROXY_HOPS:-1}
+    networks:
+      default:
+        aliases:
+          - kanban-server-1
     depends_on:
       - mongo
 
