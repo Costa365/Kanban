@@ -10,6 +10,11 @@ import { Task } from './task';
   standalone: false,
 })
 export class TaskComponent implements OnInit {
+  readonly columns = [
+    { id: 'col_to_do', state: 'To Do' },
+    { id: 'col_doing', state: 'In Progress' },
+    { id: 'col_done', state: 'Done' },
+  ];
   todoTasks: Task[] = [];
   doingTasks: Task[] = [];
   doneTasks: Task[] = [];
@@ -44,8 +49,30 @@ export class TaskComponent implements OnInit {
   private persistColumnOrder(columnId: string, tasks: Task[]): void {
     const state = this.getStateFromColumnId(columnId);
     tasks.forEach((task, index) => {
-      this.dataService.updateTask({ ...task, position: index + 1, state }).subscribe();
+      task.position = index + 1;
+      task.state = state;
+      this.dataService.updateTask({ ...task }).subscribe();
     });
+  }
+
+  private getColumnTasks(columnId: string): Task[] {
+    switch (columnId) {
+      case 'col_doing': return this.doingTasks;
+      case 'col_done': return this.doneTasks;
+      default: return this.todoTasks;
+    }
+  }
+
+  moveTask(task: Task, destinationId: string): void {
+    const source = this.columns.find((column) => column.state === task.state);
+    if (!source || source.id === destinationId || !this.columns.some((column) => column.id === destinationId)) { return; }
+    const sourceTasks = this.getColumnTasks(source.id);
+    const index = sourceTasks.findIndex((item) => item._id === task._id);
+    if (index < 0) { return; }
+    const destinationTasks = this.getColumnTasks(destinationId);
+    transferArrayItem(sourceTasks, destinationTasks, index, 0);
+    this.persistColumnOrder(source.id, sourceTasks);
+    this.persistColumnOrder(destinationId, destinationTasks);
   }
 
   onDrop(event: CdkDragDrop<Task[]>): void {

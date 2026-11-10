@@ -11,6 +11,7 @@ A Kanban board for managing tasks across three stages: **To Do**, **In Progress*
 - **Markdown support** - task content is rendered as Markdown (bold, lists, code, headings, and more)
 - **Sub-task checklists** - use `- []` (or `- [ ]`) and `- [x]` to add toggleable sub-tasks; click the checkbox on a card to flip its state
 - **Drag and drop** - drag cards between columns or reorder within a column
+- **Move shortcut** - click the move icon beside Edit and choose another column; the card moves to the top of that column
 - **Delete tasks** - hover a card and click the X, then confirm
 - **Light and dark mode** - toggle in the header; preference is saved across sessions
 
