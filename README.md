@@ -6,7 +6,7 @@ A Kanban board for managing tasks across three stages: **To Do**, **In Progress*
 
 - **User accounts** - sign up with email verification; each user has their own private board
 - **Account management** - show/hide passwords, email password reset, change password, and permanently close your account and delete its tasks
-- **Add tasks** - click *+ Add task* to create a new card in To Do, then type and hit Save
+- **Add tasks** - click *+ Add task* to create a new card at the top of To Do, then type and hit Save; it stays at the top after saving
 - **Edit tasks** - click the pencil icon on a card to edit inline, then Save or Cancel
 - **Markdown support** - task content is rendered as Markdown (bold, lists, code, headings, and more)
 - **Sub-task checklists** - use `- []` (or `- [ ]`) and `- [x]` to add toggleable sub-tasks; click the checkbox on a card to flip its state

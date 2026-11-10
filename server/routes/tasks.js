@@ -8,11 +8,15 @@ let db;
 
 async function connectDB() {
   await client.connect();
-  db = client.db('tasklist');
-  await col().createIndex({ userId: 1, date: -1, position: 1 });
-  await db.collection('users').createIndex({ email: 1 }, { unique: true });
+  await init(client.db('tasklist'));
   console.log('Connected to MongoDB');
   return db;
+}
+
+async function init(database) {
+  db = database;
+  await col().createIndex({ userId: 1, position: 1, date: -1 });
+  await db.collection('users').createIndex({ email: 1 }, { unique: true });
 }
 
 function col() {
@@ -30,7 +34,7 @@ router.get('/tasks', async (req, res) => {
       await col().updateMany({ userId: { $exists: false } }, { $set: { userId } });
     }
 
-    const tasks = await col().find({ userId }).sort({ date: -1, position: 1 }).toArray();
+    const tasks = await col().find({ userId }).sort({ position: 1, date: -1 }).toArray();
     res.json(tasks);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -46,13 +50,8 @@ router.post('/task', async (req, res) => {
   try {
     const userId = req.user.id;
     task.userId = userId;
-    const count = await col().countDocuments({ userId });
-    if (count > 0) {
-      const [last] = await col().find({ userId }).sort({ position: -1 }).limit(1).toArray();
-      task.position = parseInt(last.position, 10) + 1;
-    } else {
-      task.position = 1;
-    }
+    const [first] = await col().find({ userId, state: 'To Do' }).sort({ position: 1 }).limit(1).toArray();
+    task.position = first ? first.position - 1 : 1;
     task.date = new Date();
     const result = await col().insertOne(task);
     // A request authenticated just before closure must not leave a new orphan.
@@ -99,3 +98,4 @@ router.delete('/task/:id', async (req, res) => {
 
 module.exports = router;
 module.exports.connectDB = connectDB;
+module.exports.init = init;

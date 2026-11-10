@@ -77,7 +77,7 @@ export class TaskComponent implements OnInit {
     this.addingNew = false;
     const newTask: Task = { position: 1, title: trimmed, state: 'To Do', _id: '' };
     this.dataService.addTask(newTask).subscribe((created) => {
-      this.todoTasks.push(created);
+      this.todoTasks.unshift(created);
     });
   }
 
