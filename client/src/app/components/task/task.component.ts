@@ -124,6 +124,15 @@ export class TaskComponent implements OnInit {
     this.editingTitle = task.title;
   }
 
+  onTaskDoubleClick(event: MouseEvent, task: Task): void {
+    const target = event.target as HTMLElement;
+    if (this.editingId === task._id || target.closest('a, button, input, textarea, select, .task-checkbox, .card-actions')) {
+      return;
+    }
+    event.preventDefault();
+    this.startEdit(task);
+  }
+
   onEditKeydown(event: KeyboardEvent): void {
     if (event.key === 'Escape') {
       this.cancelEdit();

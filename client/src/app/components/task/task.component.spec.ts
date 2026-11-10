@@ -13,6 +13,46 @@ describe('TaskComponent', () => {
   ];
   columns.forEach((source, index) => {
     const destination = columns[(index + 1) % columns.length];
+    it(`edits a ${source.state} card by double-clicking, with focus, cancel, and save`, async () => {
+      const task = { _id: 'task', title: '**Original** task', position: 1, state: source.state };
+      const updateTask = jasmine.createSpy('updateTask').and.returnValue(of({}));
+      await TestBed.configureTestingModule({
+        imports: [AppModule],
+        providers: [{ provide: DataService, useValue: { getTasks: () => of([task]), updateTask } }],
+      }).compileComponents();
+      const fixture = TestBed.createComponent(TaskComponent);
+      fixture.detectChanges();
+      const card: HTMLElement = fixture.nativeElement.querySelector(`#${source.id} .task-card`);
+      card.querySelector('strong').dispatchEvent(new MouseEvent('dblclick', { bubbles: true }));
+      fixture.detectChanges();
+      await fixture.whenStable();
+      let textarea = card.querySelector('textarea');
+      expect(textarea.value).toBe('**Original** task');
+      expect(document.activeElement).toBe(textarea);
+      expect(card.classList.contains('cdk-drag-disabled')).toBeTrue();
+      textarea.value = 'Unsaved draft';
+      textarea.dispatchEvent(new Event('input'));
+      textarea.dispatchEvent(new MouseEvent('dblclick', { bubbles: true }));
+      fixture.detectChanges();
+      expect(fixture.componentInstance.editingTitle).toBe('Unsaved draft');
+      textarea.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+      fixture.detectChanges();
+      expect(card.querySelector('textarea')).toBeNull();
+      expect(card.querySelector('.markdown-body').textContent.trim()).toBe('Original task');
+      expect(updateTask).not.toHaveBeenCalled();
+
+      card.dispatchEvent(new MouseEvent('dblclick', { bubbles: true }));
+      fixture.detectChanges();
+      await fixture.whenStable();
+      textarea = card.querySelector('textarea');
+      textarea.value = 'Saved edit';
+      textarea.dispatchEvent(new Event('input'));
+      card.querySelector<HTMLButtonElement>('.edit-actions .btn-primary').click();
+      fixture.detectChanges();
+      expect(card.querySelector('.markdown-body').textContent.trim()).toBe('Saved edit');
+      expect(updateTask).toHaveBeenCalledOnceWith({ ...task, title: 'Saved edit' });
+    });
+
     it(`moves a lower card from ${source.state} using the shortcut and preserves its state when edited`, async () => {
       const task = { _id: 'moving', title: 'Move me', position: 2, state: source.state };
       const remaining = { _id: 'remaining', title: 'Stay here', position: 1, state: source.state };
@@ -46,6 +86,27 @@ describe('TaskComponent', () => {
         title: 'Edited after moving', state: destination.state, position: 1,
       }));
     });
+  });
+
+  it('keeps links, checklist controls, and action buttons out of double-click editing', async () => {
+    const task = { _id: 'task', title: '[Link](https://example.com)\n\n- [ ] Checklist', position: 1, state: 'To Do' };
+    const updateTask = jasmine.createSpy('updateTask').and.returnValue(of({}));
+    await TestBed.configureTestingModule({
+      imports: [AppModule],
+      providers: [{ provide: DataService, useValue: { getTasks: () => of([task]), updateTask } }],
+    }).compileComponents();
+    const fixture = TestBed.createComponent(TaskComponent);
+    fixture.detectChanges();
+    const card = fixture.nativeElement.querySelector('.task-card');
+    for (const selector of ['a', '.task-checkbox', '.card-actions', '[aria-label="Move task"] svg', '[aria-label="Delete task"] svg']) {
+      card.querySelector(selector).dispatchEvent(new MouseEvent('dblclick', { bubbles: true }));
+      fixture.detectChanges();
+      expect(card.querySelector('textarea')).withContext(selector).toBeNull();
+    }
+    card.querySelector('.task-checkbox').click();
+    fixture.detectChanges();
+    expect(updateTask).toHaveBeenCalledOnceWith(jasmine.objectContaining({ title: '[Link](https://example.com)\n\n- [x] Checklist' }));
+    expect(card.querySelector('textarea')).toBeNull();
   });
 
   it('dismisses the move menu with Escape without changing a task', async () => {
