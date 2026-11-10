@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { DataService } from '../../services/data.service';
 import { Task } from './task';
@@ -9,7 +10,9 @@ import { Task } from './task';
   styleUrls: ['./task.component.css'],
   standalone: false,
 })
-export class TaskComponent implements OnInit {
+export class TaskComponent implements OnInit, OnDestroy {
+  private taskLoad?: Subscription;
+  private refreshPending = false;
   readonly columns = [
     { id: 'col_to_do', state: 'To Do' },
     { id: 'col_doing', state: 'In Progress' },
@@ -30,11 +33,36 @@ export class TaskComponent implements OnInit {
     this.getTasks();
   }
 
+  ngOnDestroy(): void {
+    this.taskLoad?.unsubscribe();
+  }
+
+  @HostListener('document:visibilitychange')
+  onVisibilityChange(): void {
+    if (document.visibilityState !== 'visible') { return; }
+    if (this.editingId) {
+      this.refreshPending = true;
+      return;
+    }
+    this.getTasks();
+  }
+
+  private refreshIfPending(): void {
+    if (this.refreshPending) {
+      this.refreshPending = false;
+      this.getTasks();
+    }
+  }
+
   private getTasks(): void {
-    this.dataService.getTasks().subscribe((tasks) => {
-      this.todoTasks = tasks.filter((t) => t.state === 'To Do');
-      this.doingTasks = tasks.filter((t) => t.state === 'In Progress');
-      this.doneTasks = tasks.filter((t) => t.state === 'Done');
+    this.taskLoad?.unsubscribe();
+    this.taskLoad = this.dataService.getTasks().subscribe({
+      next: (tasks) => {
+        this.todoTasks = tasks.filter((t) => t.state === 'To Do');
+        this.doingTasks = tasks.filter((t) => t.state === 'In Progress');
+        this.doneTasks = tasks.filter((t) => t.state === 'Done');
+      },
+      error: () => { /* Keep the current board; retry on the next tab return. */ },
     });
   }
 
@@ -148,17 +176,21 @@ export class TaskComponent implements OnInit {
     if (!this.editingId) { return; }
     this.editingId = null;
     const trimmed = this.editingTitle.trim();
-    if (!trimmed || trimmed === task.title) { return; }
+    if (!trimmed || trimmed === task.title) {
+      this.refreshIfPending();
+      return;
+    }
     const updated = { ...task, title: trimmed };
     const replace = (arr: Task[]) => arr.map((t) => t._id === task._id ? updated : t);
     this.todoTasks = replace(this.todoTasks);
     this.doingTasks = replace(this.doingTasks);
     this.doneTasks = replace(this.doneTasks);
-    this.dataService.updateTask(updated).subscribe();
+    this.dataService.updateTask(updated).subscribe(() => this.refreshIfPending());
   }
 
   cancelEdit(): void {
     this.editingId = null;
+    this.refreshIfPending();
   }
 
   deleteTask(id: string): void {

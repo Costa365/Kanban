@@ -1,11 +1,95 @@
 import { TestBed } from '@angular/core/testing';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { of } from 'rxjs';
+import { of, Subject, throwError } from 'rxjs';
 import { AppModule } from '../../app.module';
 import { DataService } from '../../services/data.service';
 import { TaskComponent } from './task.component';
 
 describe('TaskComponent', () => {
+  describe('refreshing when returning to the tab', () => {
+    const original = { _id: 'original', title: 'Original', position: 1, state: 'To Do' };
+    let fixture;
+    let getTasks;
+    let updateTask;
+    let visibility;
+
+    beforeEach(async () => {
+      getTasks = jasmine.createSpy('getTasks').and.returnValue(of([{ ...original }]));
+      updateTask = jasmine.createSpy('updateTask').and.returnValue(of({}));
+      visibility = spyOnProperty(document, 'visibilityState', 'get').and.returnValue('visible');
+      await TestBed.configureTestingModule({
+        imports: [AppModule],
+        providers: [{ provide: DataService, useValue: { getTasks, updateTask } }],
+      }).compileComponents();
+      fixture = TestBed.createComponent(TaskComponent);
+      fixture.detectChanges();
+    });
+
+    it('fetches changed, moved, added, and deleted tasks only when visible', () => {
+      visibility.and.returnValue('hidden');
+      document.dispatchEvent(new Event('visibilitychange'));
+      expect(getTasks).toHaveBeenCalledTimes(1);
+      const latest = [
+        { ...original, title: 'Edited on mobile', state: 'Done' },
+        { _id: 'new', title: 'Added on mobile', position: 1, state: 'In Progress' },
+      ];
+      getTasks.and.returnValue(of(latest));
+      visibility.and.returnValue('visible');
+      document.dispatchEvent(new Event('visibilitychange'));
+      fixture.detectChanges();
+      expect(getTasks).toHaveBeenCalledTimes(2);
+      expect(fixture.componentInstance.todoTasks).toEqual([]);
+      expect(fixture.componentInstance.doingTasks).toEqual([latest[1]]);
+      expect(fixture.componentInstance.doneTasks).toEqual([latest[0]]);
+      getTasks.and.returnValue(of([]));
+      document.dispatchEvent(new Event('visibilitychange'));
+      expect(fixture.componentInstance.doneTasks).toEqual([]);
+    });
+
+    for (const action of ['save', 'cancel']) {
+      it(`preserves an open draft and refreshes after ${action}`, () => {
+        const component = fixture.componentInstance;
+        component.startEdit(component.todoTasks[0]);
+        component.editingTitle = 'Desktop draft';
+        document.dispatchEvent(new Event('visibilitychange'));
+        expect(getTasks).toHaveBeenCalledTimes(1);
+        expect(component.editingTitle).toBe('Desktop draft');
+        getTasks.and.returnValue(of([]));
+        if (action === 'save') {
+          const saved = new Subject();
+          updateTask.and.returnValue(saved);
+          component.saveEdit(component.todoTasks[0]);
+          expect(getTasks).toHaveBeenCalledTimes(1);
+          saved.next({});
+          saved.complete();
+        } else {
+          component.cancelEdit();
+        }
+        expect(getTasks).toHaveBeenCalledTimes(2);
+        expect(component.todoTasks).toEqual([]);
+      });
+    }
+
+    it('keeps the current board on a failed refresh and retries next time', () => {
+      getTasks.and.returnValue(throwError(() => new Error('Offline')));
+      document.dispatchEvent(new Event('visibilitychange'));
+      expect(fixture.componentInstance.todoTasks).toEqual([original]);
+      getTasks.and.returnValue(of([]));
+      document.dispatchEvent(new Event('visibilitychange'));
+      expect(fixture.componentInstance.todoTasks).toEqual([]);
+    });
+
+    it('cancels an outstanding load and removes the listener when destroyed', () => {
+      const response = new Subject();
+      getTasks.and.returnValue(response);
+      document.dispatchEvent(new Event('visibilitychange'));
+      fixture.destroy();
+      expect(response.observed).toBeFalse();
+      document.dispatchEvent(new Event('visibilitychange'));
+      expect(getTasks).toHaveBeenCalledTimes(2);
+    });
+  });
+
   const columns = [
     { id: 'col_to_do', state: 'To Do' },
     { id: 'col_doing', state: 'In Progress' },
